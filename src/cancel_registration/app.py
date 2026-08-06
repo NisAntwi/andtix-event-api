@@ -23,7 +23,7 @@ def create_response(status_code: int, body: dict[str, Any]) -> dict[str, Any]:
 
 def extract_registration_id(event: dict[str, Any]) -> str:
     path_parameters = event.get("pathParameters") or {}
-    registration_id_value = path_parameters.get("registrationId")
+    registration_id_value = path_parameters.get("id")
 
     if not isinstance(registration_id_value, str) or not registration_id_value.strip():
         raise ValueError("A registration ID is required.")

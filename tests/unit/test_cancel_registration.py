@@ -55,11 +55,7 @@ def test_cancels_existing_registration(cancel_registration_app):
     )
 
     response = app.lambda_handler(
-        {
-            "pathParameters": {
-                "registrationId": "registration%2F123",
-            }
-        },
+        {"pathParameters": {"id": "registration%2F123"}},
         None,
     )
     body = json.loads(response["body"])
@@ -84,7 +80,7 @@ def test_returns_not_found_for_unknown_registration(
     response = app.lambda_handler(
         {
             "pathParameters": {
-                "registrationId": "unknown-registration",
+                "id": "unknown-registration",
             }
         },
         None,
@@ -99,7 +95,7 @@ def test_returns_not_found_for_unknown_registration(
     "event",
     [
         {},
-        {"pathParameters": {"registrationId": "   "}},
+        {"pathParameters": {"id": "   "}},
     ],
 )
 def test_rejects_missing_registration_id(
@@ -125,7 +121,7 @@ def test_returns_server_error_when_configuration_is_missing(
     response = app.lambda_handler(
         {
             "pathParameters": {
-                "registrationId": "registration-123",
+                "id": "registration-123",
             }
         },
         None,
