@@ -1,0 +1,42 @@
+name: Deploy AnDTix to AWS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  deploy:
+    name: Deploy to dev
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+
+      - name: Set up AWS SAM
+        uses: aws-actions/setup-sam@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6.2.3
+        with:
+          role-to-assume: arn:aws:iam::685448854706:role/aws-sam-cli-managed-dev-pipel-PipelineExecutionRole-sUM2giwZ0hZ7
+          aws-region: us-east-1
+          allowed-account-ids: "685448854706"
+      - name: Build SAM application
+        run: sam build
+      - name: Package SAM application
+        run: |
+              sam package \
+                --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-jt8pr5bvf33z \
+                --region us-east-1 \
+                --output-template-file packaged-dev.yaml
