@@ -2,6 +2,9 @@
    ANDTIX ORGANIZER PORTAL
 ========================================================= */
 
+const API_BASE_URL =
+    "https://1y36equfk9.execute-api.us-east-1.amazonaws.com";
+
 
 /* =========================================================
    DOM ELEMENTS
@@ -27,11 +30,6 @@ const pricingOptions =
         'input[name="pricingType"]'
     );
 
-const listingOptions =
-    document.querySelectorAll(
-        'input[name="listingType"]'
-    );
-
 
 /* =========================================================
    MESSAGE HELPERS
@@ -41,8 +39,7 @@ function showOrganizerMessage(
     message,
     type = "info"
 ) {
-    submissionMessage.textContent =
-        message;
+    submissionMessage.textContent = message;
 
     submissionMessage.classList.remove(
         "hidden",
@@ -83,12 +80,38 @@ function hideOrganizerMessage() {
 
 
 /* =========================================================
-   PREVENT PAST EVENT DATES
+   API RESPONSE HELPER
+========================================================= */
+
+async function readApiResponse(response) {
+    const contentType =
+        response.headers.get("content-type") || "";
+
+    if (
+        contentType.includes(
+            "application/json"
+        )
+    ) {
+        return response.json();
+    }
+
+    const text =
+        await response.text();
+
+    return {
+        message:
+            text ||
+            "The server returned an unexpected response."
+    };
+}
+
+
+/* =========================================================
+   EVENT DATE
 ========================================================= */
 
 function configureMinimumEventDate() {
-    const today =
-        new Date();
+    const today = new Date();
 
     const year =
         today.getFullYear();
@@ -113,24 +136,19 @@ function configureMinimumEventDate() {
 ========================================================= */
 
 function updateTicketPriceState() {
-
     const selectedPricing =
         document.querySelector(
             'input[name="pricingType"]:checked'
         )?.value;
 
-
     if (selectedPricing === "FREE") {
-
         ticketPriceInput.value = "0";
 
         ticketPriceInput.disabled = true;
 
         ticketPriceInput.placeholder =
             "Free event";
-
     } else {
-
         ticketPriceInput.disabled = false;
 
         if (
@@ -147,7 +165,6 @@ function updateTicketPriceState() {
 
 pricingOptions.forEach(
     (option) => {
-
         option.addEventListener(
             "change",
             updateTicketPriceState
@@ -157,37 +174,39 @@ pricingOptions.forEach(
 
 
 /* =========================================================
-   CREATE SUBMISSION OBJECT
+   BUILD EVENT SUBMISSION
 ========================================================= */
 
 function buildEventSubmission() {
-
     const pricingType =
         document.querySelector(
             'input[name="pricingType"]:checked'
         ).value;
-
 
     const listingType =
         document.querySelector(
             'input[name="listingType"]:checked'
         ).value;
 
-
-    const eventDate =
+    const venue =
         document
-            .getElementById("eventDate")
-            .value;
+            .getElementById("eventVenue")
+            .value
+            .trim();
 
-
-    const eventTime =
+    const city =
         document
-            .getElementById("eventTime")
-            .value;
+            .getElementById("eventCity")
+            .value
+            .trim();
 
+    const country =
+        document
+            .getElementById("eventCountry")
+            .value
+            .trim();
 
     return {
-
         organizerName:
             document
                 .getElementById(
@@ -244,48 +263,28 @@ function buildEventSubmission() {
                 )
                 .value,
 
-        venue:
+        venue,
+
+        city,
+
+        country,
+
+        eventDate:
             document
                 .getElementById(
-                    "eventVenue"
+                    "eventDate"
                 )
-                .value
-                .trim(),
+                .value,
 
-        city:
+        eventTime:
             document
                 .getElementById(
-                    "eventCity"
+                    "eventTime"
                 )
-                .value
-                .trim(),
-
-        country:
-            document
-                .getElementById(
-                    "eventCountry"
-                )
-                .value
-                .trim(),
-
-        eventDate,
-
-        eventTime,
+                .value,
 
         location:
-            `${document
-                .getElementById(
-                    "eventVenue"
-                )
-                .value
-                .trim()
-            }, ${document
-                .getElementById(
-                    "eventCity"
-                )
-                .value
-                .trim()
-            }`,
+            `${venue}, ${city}, ${country}`,
 
         pricingType,
 
@@ -321,7 +320,6 @@ function buildEventSubmission() {
 ========================================================= */
 
 function validateSubmission(data) {
-
     if (
         data.pricingType === "PAID" &&
         (
@@ -334,7 +332,6 @@ function validateSubmission(data) {
         );
     }
 
-
     if (
         !data.capacity ||
         data.capacity < 1
@@ -344,12 +341,10 @@ function validateSubmission(data) {
         );
     }
 
-
     const selectedDateTime =
         new Date(
             `${data.eventDate}T${data.eventTime}`
         );
-
 
     if (
         Number.isNaN(
@@ -361,98 +356,147 @@ function validateSubmission(data) {
         );
     }
 
-
     if (
-        selectedDateTime <
-        new Date()
+        selectedDateTime <= new Date()
     ) {
         throw new Error(
-            "The event date and time cannot be in the past."
+            "The event date and time must be in the future."
         );
     }
-
 
     return true;
 }
 
 
 /* =========================================================
-   FORM SUBMISSION
+   SUBMIT EVENT TO AWS
 ========================================================= */
 
 eventSubmissionForm.addEventListener(
     "submit",
     async (event) => {
-
         event.preventDefault();
 
         hideOrganizerMessage();
 
-
         try {
-
             const submission =
                 buildEventSubmission();
-
 
             validateSubmission(
                 submission
             );
 
-
-            /*
-             * For now we verify that the frontend
-             * correctly prepares the event.
-             *
-             * In the next step this object will be
-             * POSTed to our AWS Lambda API.
-             */
-
-            console.log(
-                "AnDTix Organizer Submission:",
-                submission
-            );
-
-
             submitEventButton.disabled =
                 true;
 
             submitEventButton.innerHTML =
-                "Preparing Submission...";
+                "Submitting Event...";
 
 
-            await new Promise(
-                (resolve) =>
-                    setTimeout(
-                        resolve,
-                        700
-                    )
-            );
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/organizer/events`,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                submission
+                            )
+                    }
+                );
+
+
+            const data =
+                await readApiResponse(
+                    response
+                );
+
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message ||
+                    "Unable to submit the event."
+                );
+            }
+
+
+            const submissionId =
+                data.submission
+                    ?.submissionId;
+
+
+            const eventName =
+                data.submission
+                    ?.eventName ||
+                submission.eventName;
+
+
+            let successMessage =
+                `${eventName} has been submitted successfully and is awaiting AnDTix approval.`;
+
+            if (submissionId) {
+                successMessage +=
+                    ` Submission reference: ${submissionId}`;
+            }
 
 
             showOrganizerMessage(
-                "Event information validated successfully. The AWS submission service is ready to be connected.",
+                successMessage,
                 "success"
             );
 
 
-        } catch (error) {
+            /*
+             * Clear the form after successful
+             * submission.
+             */
 
+            eventSubmissionForm.reset();
+
+            document
+                .getElementById(
+                    "eventCountry"
+                )
+                .value =
+                "Ghana";
+
+            updateTicketPriceState();
+
+            configureMinimumEventDate();
+
+
+            /*
+             * Bring the success message
+             * into view.
+             */
+
+            submissionMessage
+                .scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+
+
+        } catch (error) {
             console.error(
                 "Organizer submission error:",
                 error
             );
 
-
             showOrganizerMessage(
                 error.message ||
-                "Unable to process the event submission.",
+                "Unable to submit the event. Please try again.",
                 "error"
             );
 
-
         } finally {
-
             submitEventButton.disabled =
                 false;
 
@@ -466,16 +510,14 @@ eventSubmissionForm.addEventListener(
 
 
 /* =========================================================
-   INITIALIZE
+   INITIALIZE ORGANIZER PORTAL
 ========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
     () => {
-
         configureMinimumEventDate();
 
         updateTicketPriceState();
-
     }
 );
