@@ -56,7 +56,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6.2.3
         with:
-          role-to-assume: arn:aws:iam::685448854706:role/aws-sam-cli-managed-dev-pipel-PipelineExecutionRole-sUM2giwZ0hZ7
+          role-to-assume: arn:aws:iam::685448854706:role/aws-sam-cli-managed-dev-pipel-PipelineExecutionRole-sUM2giwZOhZ7
           aws-region: us-east-1
           allowed-account-ids: "685448854706"
 
