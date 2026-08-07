@@ -1,5 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
+
 Description: >
   AnDTix - Africa-first, globally scalable serverless event registration
   and ticketing API.
@@ -35,7 +36,6 @@ Resources:
   EventsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Sub "andtix-${Environment}-events"
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: eventId
@@ -54,7 +54,6 @@ Resources:
   RegistrationsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Sub "andtix-${Environment}-registrations"
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: registrationId
