@@ -219,12 +219,6 @@ def lambda_handler(
                     "",
                 )
             ).strip(),
-            "organizerEmail": str(
-                submission.get(
-                    "organizerEmail",
-                    "",
-                )
-            ).strip(),
             "submissionId": submission_id,
             "approvedAt": approved_at,
         }
