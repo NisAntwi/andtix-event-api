@@ -27,32 +27,6 @@ jobs:
       - name: Set up AWS SAM
         uses: aws-actions/setup-sam@v3
 
-      - name: Debug OIDC token claims
-        shell: bash
-        run: |
-          TOKEN_JSON=$(curl --fail --silent --show-error \
-            -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
-            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com")
-
-          ID_TOKEN=$(echo "$TOKEN_JSON" | jq -r '.value')
-          PAYLOAD=$(echo "$ID_TOKEN" | cut -d. -f2 | tr '_-' '/+')
-
-          case $((${#PAYLOAD} % 4)) in
-            2) PAYLOAD="${PAYLOAD}==" ;;
-            3) PAYLOAD="${PAYLOAD}=" ;;
-          esac
-
-          echo "$PAYLOAD" | base64 --decode | jq '{
-            aud,
-            sub,
-            repository,
-            repository_id,
-            repository_owner,
-            repository_owner_id,
-            ref,
-            event_name
-          }'
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6.2.3
         with:
@@ -69,3 +43,14 @@ jobs:
             --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-jt8pr5bvf33z \
             --region us-east-1 \
             --output-template-file packaged-dev.yaml
+
+      - name: Deploy SAM application
+        run: |
+          sam deploy \
+            --template-file packaged-dev.yaml \
+            --stack-name andtix-event-api-dev \
+            --region us-east-1 \
+            --capabilities CAPABILITY_IAM \
+            --role-arn arn:aws:iam::685448854706:role/aws-sam-cli-managed-dev-p-CloudFormationExecutionRo-Muh0PYGIodbi \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset
