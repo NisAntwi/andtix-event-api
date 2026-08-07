@@ -15,6 +15,7 @@ Parameters:
       - prod
     Description: Deployment environment for AnDTix.
 
+
 Globals:
   Function:
     Runtime: python3.13
@@ -22,29 +23,45 @@ Globals:
       - x86_64
     MemorySize: 256
     Timeout: 10
+
     Environment:
       Variables:
         LOG_LEVEL: INFO
 
+
 Resources:
+
+  # ========================================================
+  # API GATEWAY
+  # ========================================================
 
   AnDTixApi:
     Type: AWS::Serverless::HttpApi
+
     Properties:
       Description: AnDTix event registration and ticketing HTTP API.
+
       CorsConfiguration:
         AllowOrigins:
           - "*"
+
         AllowHeaders:
           - "Content-Type"
+
         AllowMethods:
-          - "GET"
-          - "POST"
-          - "DELETE"
-          - "OPTIONS"
+          - GET
+          - POST
+          - DELETE
+          - OPTIONS
+
+
+  # ========================================================
+  # PUBLIC EVENTS TABLE
+  # ========================================================
 
   EventsTable:
     Type: AWS::DynamoDB::Table
+
     Properties:
       BillingMode: PAY_PER_REQUEST
 
@@ -66,8 +83,14 @@ Resources:
         - Key: Environment
           Value: !Ref Environment
 
+
+  # ========================================================
+  # REGISTRATIONS TABLE
+  # ========================================================
+
   RegistrationsTable:
     Type: AWS::DynamoDB::Table
+
     Properties:
       BillingMode: PAY_PER_REQUEST
 
@@ -109,6 +132,42 @@ Resources:
           Value: !Ref Environment
 
 
+  # ========================================================
+  # ORGANIZER EVENT SUBMISSIONS TABLE
+  # ========================================================
+
+  EventSubmissionsTable:
+    Type: AWS::DynamoDB::Table
+
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+
+      AttributeDefinitions:
+        - AttributeName: submissionId
+          AttributeType: S
+
+      KeySchema:
+        - AttributeName: submissionId
+          KeyType: HASH
+
+      SSESpecification:
+        SSEEnabled: true
+
+      Tags:
+        - Key: Application
+          Value: AnDTix
+
+        - Key: Environment
+          Value: !Ref Environment
+
+        - Key: Purpose
+          Value: OrganizerEventSubmissions
+
+
+  # ========================================================
+  # GET EVENTS
+  # ========================================================
+
   GetEventsFunction:
     Type: AWS::Serverless::Function
 
@@ -127,6 +186,7 @@ Resources:
             TableName: !Ref EventsTable
 
       Events:
+
         GetEvents:
           Type: HttpApi
 
@@ -135,6 +195,10 @@ Resources:
             Path: /events
             Method: GET
 
+
+  # ========================================================
+  # REGISTER ATTENDEE
+  # ========================================================
 
   RegisterAttendeeFunction:
     Type: AWS::Serverless::Function
@@ -158,6 +222,7 @@ Resources:
             TableName: !Ref RegistrationsTable
 
       Events:
+
         RegisterAttendee:
           Type: HttpApi
 
@@ -166,6 +231,10 @@ Resources:
             Path: /register
             Method: POST
 
+
+  # ========================================================
+  # GET REGISTRATIONS
+  # ========================================================
 
   GetRegistrationsFunction:
     Type: AWS::Serverless::Function
@@ -186,6 +255,7 @@ Resources:
             TableName: !Ref RegistrationsTable
 
       Events:
+
         GetRegistrations:
           Type: HttpApi
 
@@ -194,6 +264,10 @@ Resources:
             Path: /registrations/{email}
             Method: GET
 
+
+  # ========================================================
+  # CANCEL REGISTRATION
+  # ========================================================
 
   CancelRegistrationFunction:
     Type: AWS::Serverless::Function
@@ -213,6 +287,7 @@ Resources:
             TableName: !Ref RegistrationsTable
 
       Events:
+
         CancelRegistration:
           Type: HttpApi
 
@@ -221,6 +296,44 @@ Resources:
             Path: /registration/{id}
             Method: DELETE
 
+
+  # ========================================================
+  # ORGANIZER EVENT SUBMISSION
+  # ========================================================
+
+  SubmitEventFunction:
+    Type: AWS::Serverless::Function
+
+    Properties:
+      CodeUri: src/submit_event/
+      Handler: app.lambda_handler
+
+      Description: >
+        Receives event submissions from organizers and stores
+        them for administrative approval.
+
+      Environment:
+        Variables:
+          EVENT_SUBMISSIONS_TABLE: !Ref EventSubmissionsTable
+
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref EventSubmissionsTable
+
+      Events:
+
+        SubmitOrganizerEvent:
+          Type: HttpApi
+
+          Properties:
+            ApiId: !Ref AnDTixApi
+            Path: /organizer/events
+            Method: POST
+
+
+# ==========================================================
+# OUTPUTS
+# ==========================================================
 
 Outputs:
 
@@ -241,3 +354,9 @@ Outputs:
     Description: Name of the AnDTix registrations table.
 
     Value: !Ref RegistrationsTable
+
+
+  EventSubmissionsTableName:
+    Description: Name of the AnDTix organizer event submissions table.
+
+    Value: !Ref EventSubmissionsTable

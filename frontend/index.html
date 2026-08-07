@@ -3,321 +3,1474 @@
 
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AnDTix | Event Registration & Ticketing</title>
+    <meta name="description"
+        content="AnDTix - Discover, promote and book events through a modern cloud-powered ticketing platform.">
 
-    <meta name="description" content="AnDTix is a serverless event registration and ticketing platform powered by AWS.">
+    <title>AnDTix | Discover Events. Book Experiences.</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
+
 <body>
 
+
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
     <header class="site-header">
-        <div class="container header-content">
-            <div class="brand">
-                <div class="brand-logo">A</div>
 
-                <div>
-                    <h1>AnDTix</h1>
-                    <p>Event Registration & Ticketing</p>
+        <div class="container nav-wrapper">
+
+            <a href="#" class="brand">
+
+                <div class="brand-logo">
+                    A
                 </div>
+
+                <div class="brand-text">
+                    <strong>AnDTix</strong>
+                    <span>Events. Tickets. Experiences.</span>
+                </div>
+
+            </a>
+
+
+            <nav class="desktop-nav">
+
+                <a href="#events">
+                    Discover
+                </a>
+
+                <a href="#categories">
+                    Categories
+                </a>
+
+                <a href="#tickets">
+                    My Tickets
+                </a>
+
+                <a href="#vendors">
+                    List Your Event
+                </a>
+
+                <a href="#about">
+                    About
+                </a>
+
+            </nav>
+
+
+            <div class="nav-actions">
+
+                <a href="#tickets" class="nav-login">
+                    My Tickets
+                </a>
+
+                <a href="#events" class="nav-primary">
+                    Find Events
+                </a>
+
             </div>
 
-            <div class="aws-badge">
-                Powered by AWS
-            </div>
         </div>
+
     </header>
 
 
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
     <main>
 
-        <!-- HERO SECTION -->
+
+        <!-- =================================================
+             HERO
+        ================================================== -->
+
         <section class="hero">
-            <div class="container hero-content">
 
-                <div class="hero-text">
-                    <span class="eyebrow">Simple • Secure • Serverless</span>
+            <div class="hero-glow hero-glow-one"></div>
+            <div class="hero-glow hero-glow-two"></div>
 
-                    <h2>
+
+            <div class="container hero-grid">
+
+
+                <div class="hero-copy">
+
+                    <div class="hero-badge">
+
+                        <span class="pulse-dot"></span>
+
+                        Africa-first event discovery & ticketing
+
+                    </div>
+
+
+                    <h1>
                         Discover events.
-                        <br>
-                        Register in seconds.
-                    </h2>
+                        <span>Book experiences.</span>
+                        Make memories.
+                    </h1>
 
-                    <p>
-                        AnDTix makes event registration simple by connecting
-                        attendees to events through a fast and scalable
-                        cloud-based platform.
+
+                    <p class="hero-description">
+
+                        Explore exciting events, secure your tickets,
+                        manage registrations and connect with experiences
+                        that matter — all from one modern platform.
+
                     </p>
 
-                    <a href="#events" class="hero-button">
-                        View Available Events
-                    </a>
+
+                    <!-- SEARCH -->
+
+                    <div class="hero-search">
+
+                        <div class="search-field">
+
+                            <span class="search-icon">
+                                ⌕
+                            </span>
+
+                            <input type="text" id="heroEventSearch"
+                                placeholder="Search concerts, conferences, tech events...">
+
+                        </div>
+
+
+                        <div class="search-field location-field">
+
+                            <span class="search-icon">
+                                ⌖
+                            </span>
+
+                            <input type="text" id="heroLocationSearch" placeholder="Location">
+
+                        </div>
+
+
+                        <button type="button" id="heroSearchButton" class="hero-search-button">
+                            Search Events
+                        </button>
+
+                    </div>
+
+
+                    <!-- HERO HIGHLIGHTS -->
+
+                    <div class="hero-highlights">
+
+                        <div>
+                            <strong>Secure</strong>
+                            <span>HTTPS powered</span>
+                        </div>
+
+                        <div>
+                            <strong>Fast</strong>
+                            <span>Serverless AWS</span>
+                        </div>
+
+                        <div>
+                            <strong>Simple</strong>
+                            <span>Register in seconds</span>
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="hero-card">
-                    <div class="hero-card-icon">✓</div>
 
-                    <h3>AWS Powered</h3>
 
-                    <p>
-                        Built with API Gateway, Lambda, DynamoDB,
-                        AWS SAM and GitHub Actions.
-                    </p>
+                <!-- FEATURED EVENT -->
+
+                <div class="hero-event-card">
+
+                    <div class="hero-event-image">
+
+                        <div class="event-image-overlay"></div>
+
+
+                        <div class="featured-tag">
+                            Featured Event
+                        </div>
+
+
+                        <div class="event-image-content">
+
+                            <span class="event-category">
+                                TECHNOLOGY
+                            </span>
+
+                            <h2>
+                                AnDTix Youth Tech Conference 2026
+                            </h2>
+
+                            <p>
+                                Kumasi, Ghana
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hero-event-footer">
+
+                        <div>
+
+                            <span class="small-label">
+                                Event date
+                            </span>
+
+                            <strong>
+                                20 September 2026
+                            </strong>
+
+                        </div>
+
+
+                        <a href="#events" class="mini-ticket-button">
+                            Get Ticket →
+                        </a>
+
+                    </div>
+
                 </div>
+
 
             </div>
+
         </section>
 
 
-        <!-- MAIN APPLICATION -->
-        <section class="application-section">
 
-            <div class="container application-grid">
+        <!-- =================================================
+             QUICK STATS
+        ================================================== -->
 
-                <!-- AVAILABLE EVENTS -->
-                <div class="events-panel" id="events">
+        <section class="stats-section">
 
-                    <div class="section-heading">
-                        <div>
-                            <span class="section-label">EVENTS</span>
-                            <h2>Available Events</h2>
-                        </div>
+            <div class="container stats-grid">
 
-                        <button type="button" id="refreshEventsButton" class="refresh-button">
-                            Refresh
-                        </button>
-                    </div>
+                <div class="stat-item">
+                    <strong>100%</strong>
+                    <span>Cloud Powered</span>
+                </div>
 
-                    <p class="section-description">
-                        Browse the currently available AnDTix events and select
-                        one to register.
+                <div class="stat-item">
+                    <strong>24/7</strong>
+                    <span>Event Discovery</span>
+                </div>
+
+                <div class="stat-item">
+                    <strong>Secure</strong>
+                    <span>HTTPS Platform</span>
+                </div>
+
+                <div class="stat-item">
+                    <strong>Fast</strong>
+                    <span>Digital Registration</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             EVENT CATEGORIES
+        ================================================== -->
+
+        <section class="categories-section" id="categories">
+
+            <div class="container">
+
+
+                <div class="section-intro centered">
+
+                    <span class="section-kicker">
+                        EXPLORE
+                    </span>
+
+                    <h2>
+                        Find an experience for every moment
+                    </h2>
+
+                    <p>
+                        Discover events across entertainment,
+                        technology, business, lifestyle and more.
                     </p>
-
-
-                    <!-- Loading state -->
-                    <div id="eventsLoading" class="status-card">
-                        Loading available events...
-                    </div>
-
-
-                    <!-- Error state -->
-                    <div id="eventsError" class="message error-message hidden">
-                    </div>
-
-
-                    <!-- Events loaded from AWS API -->
-                    <div id="eventsList" class="events-list"></div>
 
                 </div>
 
 
-                <!-- REGISTRATION FORM -->
-                <div class="registration-panel">
 
-                    <div class="section-heading">
-                        <div>
-                            <span class="section-label">REGISTRATION</span>
-                            <h2>Register for an Event</h2>
-                        </div>
+                <div class="category-grid">
+
+
+                    <button class="category-card" type="button">
+
+                        <span class="category-icon">
+                            🎵
+                        </span>
+
+                        <strong>
+                            Music
+                        </strong>
+
+                        <span>
+                            Concerts & festivals
+                        </span>
+
+                    </button>
+
+
+                    <button class="category-card" type="button">
+
+                        <span class="category-icon">
+                            💻
+                        </span>
+
+                        <strong>
+                            Technology
+                        </strong>
+
+                        <span>
+                            Tech & innovation
+                        </span>
+
+                    </button>
+
+
+                    <button class="category-card" type="button">
+
+                        <span class="category-icon">
+                            💼
+                        </span>
+
+                        <strong>
+                            Business
+                        </strong>
+
+                        <span>
+                            Networking & summits
+                        </span>
+
+                    </button>
+
+
+                    <button class="category-card" type="button">
+
+                        <span class="category-icon">
+                            🎨
+                        </span>
+
+                        <strong>
+                            Arts
+                        </strong>
+
+                        <span>
+                            Creative experiences
+                        </span>
+
+                    </button>
+
+
+                    <button class="category-card" type="button">
+
+                        <span class="category-icon">
+                            🏃
+                        </span>
+
+                        <strong>
+                            Sports
+                        </strong>
+
+                        <span>
+                            Games & fitness
+                        </span>
+
+                    </button>
+
+
+                    <button class="category-card" type="button">
+
+                        <span class="category-icon">
+                            🍽️
+                        </span>
+
+                        <strong>
+                            Lifestyle
+                        </strong>
+
+                        <span>
+                            Food & social events
+                        </span>
+
+                    </button>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             DISCOVER EVENTS
+        ================================================== -->
+
+        <section class="events-section" id="events">
+
+            <div class="container">
+
+
+                <div class="section-heading-row">
+
+                    <div class="section-intro">
+
+                        <span class="section-kicker">
+                            DISCOVER EVENTS
+                        </span>
+
+                        <h2>
+                            Events you don't want to miss
+                        </h2>
+
+                        <p>
+                            Browse events currently available
+                            on the AnDTix platform.
+                        </p>
+
                     </div>
 
-                    <p class="section-description">
-                        Select an event and provide your details to complete
-                        your registration.
+
+                    <button type="button" id="refreshEventsButton" class="outline-button">
+                        ↻ Refresh Events
+                    </button>
+
+                </div>
+
+
+
+                <div id="eventsLoading" class="status-card">
+
+                    <div class="loader"></div>
+
+                    Loading available events...
+
+                </div>
+
+
+
+                <div id="eventsError" class="message error-message hidden">
+                </div>
+
+
+
+                <div id="eventsList" class="premium-events-grid">
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             QUICK BOOKING
+        ================================================== -->
+
+        <section class="booking-section">
+
+            <div class="container booking-grid">
+
+
+                <!-- BOOKING INFO -->
+
+                <div class="booking-content">
+
+                    <span class="section-kicker">
+                        QUICK BOOKING
+                    </span>
+
+                    <h2>
+                        Your next experience is only a few clicks away.
+                    </h2>
+
+                    <p>
+                        Select an event, provide your details
+                        and secure your registration instantly.
                     </p>
+
+
+                    <div class="booking-benefits">
+
+                        <div>
+                            <span>✓</span>
+                            Instant registration
+                        </div>
+
+                        <div>
+                            <span>✓</span>
+                            Duplicate booking protection
+                        </div>
+
+                        <div>
+                            <span>✓</span>
+                            Manage your registration online
+                        </div>
+
+                        <div>
+                            <span>✓</span>
+                            Secure AWS infrastructure
+                        </div>
+
+                    </div>
+
+
+                    <!-- PAYMENT PREVIEW -->
+
+                    <div class="payment-preview">
+
+                        <span>
+                            Payment integration ready for
+                        </span>
+
+                        <div class="payment-badges">
+
+                            <span>
+                                Mobile Money
+                            </span>
+
+                            <span>
+                                Visa
+                            </span>
+
+                            <span>
+                                Mastercard
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- REGISTRATION FORM -->
+
+                <div class="premium-form-card">
+
+
+                    <div class="form-card-header">
+
+                        <div class="form-icon">
+                            🎟
+                        </div>
+
+                        <div>
+
+                            <span>
+                                RESERVE YOUR SPOT
+                            </span>
+
+                            <h3>
+                                Register for an Event
+                            </h3>
+
+                        </div>
+
+                    </div>
+
 
 
                     <form id="registrationForm">
 
+
                         <div class="form-group">
+
                             <label for="eventSelect">
-                                Event
+                                Choose Event
                             </label>
 
                             <select id="eventSelect" name="eventId" required>
+
                                 <option value="">
                                     Select an event
                                 </option>
+
                             </select>
+
                         </div>
 
 
+
                         <div class="form-group">
+
                             <label for="attendeeName">
                                 Full Name
                             </label>
 
                             <input type="text" id="attendeeName" name="attendeeName" placeholder="Enter your full name"
                                 required>
+
                         </div>
 
 
+
                         <div class="form-group">
+
                             <label for="email">
                                 Email Address
                             </label>
 
                             <input type="email" id="email" name="email" placeholder="name@example.com" required>
+
                         </div>
 
 
-                        <button type="submit" id="registerButton" class="primary-button">
-                            Register Now
+
+                        <button type="submit" id="registerButton" class="booking-button">
+
+                            Complete Registration
+
+                            <span>
+                                →
+                            </span>
+
                         </button>
 
+
                     </form>
+
 
 
                     <div id="registrationMessage" class="message hidden">
                     </div>
 
+
+
+                    <div class="secure-note">
+                        🔒 Your registration is processed securely.
+                    </div>
+
+
                 </div>
+
 
             </div>
 
         </section>
 
 
-        <!-- REGISTRATION LOOKUP -->
-        <section class="lookup-section">
+
+        <!-- =================================================
+             MY TICKETS
+        ================================================== -->
+
+        <section class="tickets-section" id="tickets">
 
             <div class="container">
 
-                <div class="lookup-card">
 
-                    <div class="section-heading">
-                        <div>
-                            <span class="section-label">
-                                MY REGISTRATIONS
-                            </span>
+                <div class="ticket-lookup-card">
 
-                            <h2>
-                                Find Your Registration
-                            </h2>
-                        </div>
+
+                    <div class="ticket-lookup-copy">
+
+                        <span class="section-kicker">
+                            MY TICKETS
+                        </span>
+
+                        <h2>
+                            Find your registration
+                        </h2>
+
+                        <p>
+                            Enter your email address to view and
+                            manage your active event registrations.
+                        </p>
+
                     </div>
 
-                    <p class="section-description">
-                        Enter your email address to view your current
-                        registrations.
-                    </p>
 
 
                     <form id="lookupForm" class="lookup-form">
 
                         <input type="email" id="lookupEmail" placeholder="Enter your email address" required>
 
-                        <button type="submit" class="secondary-button">
-                            Find Registrations
+                        <button type="submit" class="lookup-button">
+                            Find My Tickets
                         </button>
 
                     </form>
+
 
 
                     <div id="lookupMessage" class="message hidden">
                     </div>
 
 
+
                     <div id="registrationsList" class="registrations-list">
                     </div>
 
+
                 </div>
+
 
             </div>
 
         </section>
 
 
-        <!-- PROJECT INFORMATION -->
+
+        <!-- =================================================
+             EVENT ORGANIZERS / VENDORS
+        ================================================== -->
+
+        <section class="vendor-section" id="vendors">
+
+            <div class="container vendor-card">
+
+
+                <div class="vendor-copy">
+
+                    <span class="vendor-kicker">
+                        FOR EVENT ORGANIZERS
+                    </span>
+
+                    <h2>
+                        Have an event?
+                        <br>
+                        Put it in front of the right audience.
+                    </h2>
+
+                    <p>
+                        AnDTix is being built to give organizers
+                        a simple way to publish events, sell tickets,
+                        promote experiences and manage attendees.
+                    </p>
+
+
+                    <div class="vendor-points">
+
+                        <div>
+                            ✓ Create event listings
+                        </div>
+
+                        <div>
+                            ✓ Sell digital tickets
+                        </div>
+
+                        <div>
+                            ✓ Promote featured events
+                        </div>
+
+                        <div>
+                            ✓ Track registrations
+                        </div>
+
+                    </div>
+
+
+
+                    <button type="button" class="vendor-button" id="vendorInterestButton">
+
+                        List Your Event
+
+                        <span>
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+
+                <!-- VENDOR DASHBOARD PREVIEW -->
+
+                <div class="vendor-dashboard-preview">
+
+
+                    <div class="dashboard-top">
+
+                        <div>
+
+                            <span>
+                                Organizer Dashboard
+                            </span>
+
+                            <strong>
+                                Event Performance
+                            </strong>
+
+                        </div>
+
+
+                        <span class="live-pill">
+                            ● LIVE
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="dashboard-stats">
+
+                        <div>
+
+                            <span>
+                                Tickets Sold
+                            </span>
+
+                            <strong>
+                                128
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Revenue
+                            </span>
+
+                            <strong>
+                                GHS 6,400
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="dashboard-chart">
+
+                        <div class="chart-bars">
+
+                            <span style="height: 30%"></span>
+                            <span style="height: 48%"></span>
+                            <span style="height: 40%"></span>
+                            <span style="height: 72%"></span>
+                            <span style="height: 58%"></span>
+                            <span style="height: 90%"></span>
+                            <span style="height: 76%"></span>
+
+                        </div>
+
+                    </div>
+
+
+                    <small>
+                        Demo preview — vendor dashboard coming soon.
+                    </small>
+
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             WHY ANDTIX
+        ================================================== -->
+
+        <section class="why-section">
+
+            <div class="container">
+
+
+                <div class="section-intro centered">
+
+                    <span class="section-kicker">
+                        WHY ANDTIX
+                    </span>
+
+                    <h2>
+                        Built for modern event experiences
+                    </h2>
+
+                    <p>
+                        A simple platform designed for attendees,
+                        event organizers and growing digital communities.
+                    </p>
+
+                </div>
+
+
+
+                <div class="why-grid">
+
+
+                    <article class="why-card">
+
+                        <div class="why-icon">
+                            ⚡
+                        </div>
+
+                        <h3>
+                            Fast registration
+                        </h3>
+
+                        <p>
+                            Discover and register for an event
+                            in just a few simple steps.
+                        </p>
+
+                    </article>
+
+
+
+                    <article class="why-card">
+
+                        <div class="why-icon">
+                            🔐
+                        </div>
+
+                        <h3>
+                            Secure infrastructure
+                        </h3>
+
+                        <p>
+                            Built using managed AWS services
+                            and secure HTTPS delivery.
+                        </p>
+
+                    </article>
+
+
+
+                    <article class="why-card">
+
+                        <div class="why-icon">
+                            🌍
+                        </div>
+
+                        <h3>
+                            Built to scale
+                        </h3>
+
+                        <p>
+                            Serverless technology gives AnDTix
+                            room to grow across African markets
+                            and beyond.
+                        </p>
+
+                    </article>
+
+
+
+                    <article class="why-card">
+
+                        <div class="why-icon">
+                            🎟️
+                        </div>
+
+                        <h3>
+                            Everything in one place
+                        </h3>
+
+                        <p>
+                            Event discovery, registration,
+                            ticket management and organizer tools.
+                        </p>
+
+                    </article>
+
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             TECHNOLOGY
+        ================================================== -->
+
         <section class="technology-section">
 
             <div class="container">
 
-                <div class="technology-heading">
-                    <span class="section-label">ARCHITECTURE</span>
+
+                <div class="section-intro centered">
+
+                    <span class="section-kicker">
+                        TECHNOLOGY
+                    </span>
 
                     <h2>
-                        Built on a Serverless AWS Architecture
+                        Powered by AWS serverless technology
                     </h2>
 
                     <p>
-                        AnDTix combines managed AWS services with automated
-                        CI/CD to provide a scalable event registration platform.
+                        AnDTix combines scalable cloud services
+                        with automated deployment and modern
+                        web technologies.
                     </p>
+
                 </div>
+
 
 
                 <div class="technology-grid">
 
+
                     <div class="technology-card">
-                        <span>🌐</span>
-                        <h3>API Gateway</h3>
+
+                        <span class="tech-icon">
+                            ☁
+                        </span>
+
+                        <h3>
+                            CloudFront
+                        </h3>
+
                         <p>
-                            Provides secure HTTP endpoints for the application.
+                            Fast global website delivery.
                         </p>
+
                     </div>
 
 
+
                     <div class="technology-card">
-                        <span>λ</span>
-                        <h3>AWS Lambda</h3>
+
+                        <span class="tech-icon">
+                            S3
+                        </span>
+
+                        <h3>
+                            Amazon S3
+                        </h3>
+
                         <p>
-                            Runs the event and registration backend logic.
+                            Secure frontend hosting.
                         </p>
+
                     </div>
 
 
+
                     <div class="technology-card">
-                        <span>🗄️</span>
-                        <h3>DynamoDB</h3>
+
+                        <span class="tech-icon">
+                            ⇄
+                        </span>
+
+                        <h3>
+                            API Gateway
+                        </h3>
+
                         <p>
-                            Stores event and attendee registration data.
+                            Secure HTTP API endpoints.
                         </p>
+
                     </div>
 
 
+
                     <div class="technology-card">
-                        <span>⚙️</span>
-                        <h3>GitHub Actions</h3>
+
+                        <span class="tech-icon">
+                            λ
+                        </span>
+
+                        <h3>
+                            AWS Lambda
+                        </h3>
+
                         <p>
-                            Tests and deploys application changes automatically.
+                            Serverless backend logic.
                         </p>
+
                     </div>
+
+
+
+                    <div class="technology-card">
+
+                        <span class="tech-icon">
+                            DB
+                        </span>
+
+                        <h3>
+                            DynamoDB
+                        </h3>
+
+                        <p>
+                            Scalable event data storage.
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="technology-card">
+
+                        <span class="tech-icon">
+                            CI
+                        </span>
+
+                        <h3>
+                            GitHub Actions
+                        </h3>
+
+                        <p>
+                            Automated testing and deployment.
+                        </p>
+
+                    </div>
+
 
                 </div>
+
 
             </div>
 
         </section>
 
+
+
+        <!-- =================================================
+             FOUNDER & CEO
+        ================================================== -->
+
+        <section class="founder-section" id="about">
+
+            <div class="container founder-grid">
+
+
+                <!-- CEO PHOTO -->
+
+                <div class="founder-visual">
+
+                    <div class="founder-photo-card">
+
+                        <img src="assets/dennis-antwi.jpg" alt="Dennis Antwi - Founder and CEO of AnDTix"
+                            class="founder-photo">
+
+
+                        <div class="founder-photo-overlay">
+
+                            <span>
+                                FOUNDER & CEO
+                            </span>
+
+                            <strong>
+                                Dennis Antwi
+                            </strong>
+
+                            <small>
+                                AnDTix
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CEO BIOGRAPHY -->
+
+                <div class="founder-copy">
+
+                    <span class="section-kicker">
+                        THE BRAIN BEHIND ANDTIX
+                    </span>
+
+
+                    <h2>
+                        Building smarter event experiences
+                        through finance, technology and cloud innovation.
+                    </h2>
+
+
+                    <p>
+                        Dennis Antwi is an Accounting and Finance
+                        professional with experience in retail banking,
+                        financial operations, customer service,
+                        business development and consulting.
+                        With experience at FirstBank Ghana and PwC Ghana,
+                        he combines a strong financial-services background
+                        with growing expertise in AWS cloud computing,
+                        fintech and digital banking.
+                    </p>
+
+
+                    <p>
+                        As Founder & CEO of AnDTix, he is focused on
+                        combining finance, technology and cloud innovation
+                        to build practical digital solutions for businesses,
+                        event organizers and communities.
+                    </p>
+
+
+
+                    <!-- VISION -->
+
+                    <div class="vision-box">
+
+                        <span>
+                            VISION
+                        </span>
+
+                        <strong>
+                            To make discovering, promoting, booking and
+                            attending events across Africa simpler,
+                            safer and more accessible through modern
+                            digital technology.
+                        </strong>
+
+                    </div>
+
+
+
+                    <!-- CEO NAME -->
+
+                    <div class="founder-name">
+
+                        <strong>
+                            Dennis Antwi
+                        </strong>
+
+                        <span>
+                            Founder & CEO · AnDTix
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FINAL CALL TO ACTION
+        ================================================== -->
+
+        <section class="final-cta">
+
+            <div class="container final-cta-content">
+
+
+                <div>
+
+                    <span>
+                        READY FOR YOUR NEXT EXPERIENCE?
+                    </span>
+
+                    <h2>
+                        Discover what's happening around you.
+                    </h2>
+
+                </div>
+
+
+                <a href="#events" class="final-cta-button">
+                    Explore Events →
+                </a>
+
+
+            </div>
+
+        </section>
+
+
     </main>
 
 
-    <footer>
 
-        <div class="container footer-content">
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
 
-            <div>
-                <strong>AnDTix</strong>
-                <p>AWS Serverless Event Registration Platform</p>
+    <footer class="site-footer">
+
+
+        <div class="container footer-grid">
+
+
+            <!-- BRAND -->
+
+            <div class="footer-brand">
+
+                <div class="brand">
+
+                    <div class="brand-logo">
+                        A
+                    </div>
+
+                    <div class="brand-text">
+
+                        <strong>
+                            AnDTix
+                        </strong>
+
+                        <span>
+                            Events. Tickets. Experiences.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <p>
+                    A modern cloud-powered event discovery,
+                    registration and ticketing platform built
+                    to connect people with memorable experiences.
+                </p>
+
             </div>
 
+
+
+            <!-- DISCOVER -->
+
+            <div class="footer-column">
+
+                <strong>
+                    Discover
+                </strong>
+
+                <a href="#events">
+                    Events
+                </a>
+
+                <a href="#categories">
+                    Categories
+                </a>
+
+                <a href="#tickets">
+                    My Tickets
+                </a>
+
+            </div>
+
+
+
+            <!-- ORGANIZERS -->
+
+            <div class="footer-column">
+
+                <strong>
+                    Organizers
+                </strong>
+
+                <a href="#vendors">
+                    List Your Event
+                </a>
+
+                <a href="#vendors">
+                    Event Promotion
+                </a>
+
+                <a href="#vendors">
+                    Vendor Dashboard
+                </a>
+
+            </div>
+
+
+
+            <!-- COMPANY -->
+
+            <div class="footer-column">
+
+                <strong>
+                    Company
+                </strong>
+
+                <a href="#about">
+                    About AnDTix
+                </a>
+
+                <a href="#about">
+                    Founder & CEO
+                </a>
+
+                <a href="#">
+                    Contact
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- FOOTER BOTTOM -->
+
+        <div class="container footer-bottom">
+
+            <span>
+                © 2026 AnDTix. All rights reserved.
+            </span>
+
+
             <div>
-                <p>
-                    Student Capstone Project
-                </p>
+
+                <a href="#">
+                    Privacy
+                </a>
+
+                <a href="#">
+                    Terms
+                </a>
+
+                <a href="#">
+                    Refund Policy
+                </a>
+
             </div>
 
         </div>
 
+
     </footer>
 
 
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
     <script src="app.js"></script>
+
 
 </body>
 
