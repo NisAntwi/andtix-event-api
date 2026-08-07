@@ -30,7 +30,6 @@ Resources:
   AnDTixApi:
     Type: AWS::Serverless::HttpApi
     Properties:
-      StageName: !Ref Environment
       Description: AnDTix event registration and ticketing HTTP API.
 
   EventsTable:
@@ -170,7 +169,7 @@ Outputs:
   ApiUrl:
     Description: Base URL of the deployed AnDTix API.
     Value: !Sub >
-      https://${AnDTixApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/${Environment}
+      https://${AnDTixApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}
 
   EventsTableName:
     Description: Name of the AnDTix events table.
