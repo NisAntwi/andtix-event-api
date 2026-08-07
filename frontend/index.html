@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AnDTix | Event Registration & Ticketing</title>
+
+    <meta name="description" content="AnDTix is a serverless event registration and ticketing platform powered by AWS.">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="brand">
+                <div class="brand-logo">A</div>
+
+                <div>
+                    <h1>AnDTix</h1>
+                    <p>Event Registration & Ticketing</p>
+                </div>
+            </div>
+
+            <div class="aws-badge">
+                Powered by AWS
+            </div>
+        </div>
+    </header>
+
+
+    <main>
+
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="container hero-content">
+
+                <div class="hero-text">
+                    <span class="eyebrow">Simple • Secure • Serverless</span>
+
+                    <h2>
+                        Discover events.
+                        <br>
+                        Register in seconds.
+                    </h2>
+
+                    <p>
+                        AnDTix makes event registration simple by connecting
+                        attendees to events through a fast and scalable
+                        cloud-based platform.
+                    </p>
+
+                    <a href="#events" class="hero-button">
+                        View Available Events
+                    </a>
+                </div>
+
+                <div class="hero-card">
+                    <div class="hero-card-icon">✓</div>
+
+                    <h3>AWS Powered</h3>
+
+                    <p>
+                        Built with API Gateway, Lambda, DynamoDB,
+                        AWS SAM and GitHub Actions.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- MAIN APPLICATION -->
+        <section class="application-section">
+
+            <div class="container application-grid">
+
+                <!-- AVAILABLE EVENTS -->
+                <div class="events-panel" id="events">
+
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-label">EVENTS</span>
+                            <h2>Available Events</h2>
+                        </div>
+
+                        <button type="button" id="refreshEventsButton" class="refresh-button">
+                            Refresh
+                        </button>
+                    </div>
+
+                    <p class="section-description">
+                        Browse the currently available AnDTix events and select
+                        one to register.
+                    </p>
+
+
+                    <!-- Loading state -->
+                    <div id="eventsLoading" class="status-card">
+                        Loading available events...
+                    </div>
+
+
+                    <!-- Error state -->
+                    <div id="eventsError" class="message error-message hidden">
+                    </div>
+
+
+                    <!-- Events loaded from AWS API -->
+                    <div id="eventsList" class="events-list"></div>
+
+                </div>
+
+
+                <!-- REGISTRATION FORM -->
+                <div class="registration-panel">
+
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-label">REGISTRATION</span>
+                            <h2>Register for an Event</h2>
+                        </div>
+                    </div>
+
+                    <p class="section-description">
+                        Select an event and provide your details to complete
+                        your registration.
+                    </p>
+
+
+                    <form id="registrationForm">
+
+                        <div class="form-group">
+                            <label for="eventSelect">
+                                Event
+                            </label>
+
+                            <select id="eventSelect" name="eventId" required>
+                                <option value="">
+                                    Select an event
+                                </option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="attendeeName">
+                                Full Name
+                            </label>
+
+                            <input type="text" id="attendeeName" name="attendeeName" placeholder="Enter your full name"
+                                required>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="email">
+                                Email Address
+                            </label>
+
+                            <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                        </div>
+
+
+                        <button type="submit" id="registerButton" class="primary-button">
+                            Register Now
+                        </button>
+
+                    </form>
+
+
+                    <div id="registrationMessage" class="message hidden">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- REGISTRATION LOOKUP -->
+        <section class="lookup-section">
+
+            <div class="container">
+
+                <div class="lookup-card">
+
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-label">
+                                MY REGISTRATIONS
+                            </span>
+
+                            <h2>
+                                Find Your Registration
+                            </h2>
+                        </div>
+                    </div>
+
+                    <p class="section-description">
+                        Enter your email address to view your current
+                        registrations.
+                    </p>
+
+
+                    <form id="lookupForm" class="lookup-form">
+
+                        <input type="email" id="lookupEmail" placeholder="Enter your email address" required>
+
+                        <button type="submit" class="secondary-button">
+                            Find Registrations
+                        </button>
+
+                    </form>
+
+
+                    <div id="lookupMessage" class="message hidden">
+                    </div>
+
+
+                    <div id="registrationsList" class="registrations-list">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROJECT INFORMATION -->
+        <section class="technology-section">
+
+            <div class="container">
+
+                <div class="technology-heading">
+                    <span class="section-label">ARCHITECTURE</span>
+
+                    <h2>
+                        Built on a Serverless AWS Architecture
+                    </h2>
+
+                    <p>
+                        AnDTix combines managed AWS services with automated
+                        CI/CD to provide a scalable event registration platform.
+                    </p>
+                </div>
+
+
+                <div class="technology-grid">
+
+                    <div class="technology-card">
+                        <span>🌐</span>
+                        <h3>API Gateway</h3>
+                        <p>
+                            Provides secure HTTP endpoints for the application.
+                        </p>
+                    </div>
+
+
+                    <div class="technology-card">
+                        <span>λ</span>
+                        <h3>AWS Lambda</h3>
+                        <p>
+                            Runs the event and registration backend logic.
+                        </p>
+                    </div>
+
+
+                    <div class="technology-card">
+                        <span>🗄️</span>
+                        <h3>DynamoDB</h3>
+                        <p>
+                            Stores event and attendee registration data.
+                        </p>
+                    </div>
+
+
+                    <div class="technology-card">
+                        <span>⚙️</span>
+                        <h3>GitHub Actions</h3>
+                        <p>
+                            Tests and deploys application changes automatically.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <div class="container footer-content">
+
+            <div>
+                <strong>AnDTix</strong>
+                <p>AWS Serverless Event Registration Platform</p>
+            </div>
+
+            <div>
+                <p>
+                    Student Capstone Project
+                </p>
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
