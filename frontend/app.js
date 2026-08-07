@@ -1,68 +1,28 @@
-const API_BASE_URL =
-    "https://1y36equfk9.execute-api.us-east-1.amazonaws.com";
-
+const API_BASE_URL = "https://1y36equfk9.execute-api.us-east-1.amazonaws.com";
 
 /* =========================================================
    DOM ELEMENTS
 ========================================================= */
 
-const eventsList =
-    document.getElementById("eventsList");
-
-const eventsLoading =
-    document.getElementById("eventsLoading");
-
-const eventsError =
-    document.getElementById("eventsError");
-
-const refreshEventsButton =
-    document.getElementById("refreshEventsButton");
-
-const eventSelect =
-    document.getElementById("eventSelect");
-
-const registrationForm =
-    document.getElementById("registrationForm");
-
-const attendeeNameInput =
-    document.getElementById("attendeeName");
-
-const emailInput =
-    document.getElementById("email");
-
-const registerButton =
-    document.getElementById("registerButton");
-
-const registrationMessage =
-    document.getElementById("registrationMessage");
-
-const lookupForm =
-    document.getElementById("lookupForm");
-
-const lookupEmailInput =
-    document.getElementById("lookupEmail");
-
-const lookupMessage =
-    document.getElementById("lookupMessage");
-
-const registrationsList =
-    document.getElementById("registrationsList");
-
-const heroEventSearch =
-    document.getElementById("heroEventSearch");
-
-const heroLocationSearch =
-    document.getElementById("heroLocationSearch");
-
-const heroSearchButton =
-    document.getElementById("heroSearchButton");
-
-const vendorInterestButton =
-    document.getElementById("vendorInterestButton");
-
-const categoryButtons =
-    document.querySelectorAll(".category-card");
-
+const eventsList = document.getElementById("eventsList");
+const eventsLoading = document.getElementById("eventsLoading");
+const eventsError = document.getElementById("eventsError");
+const refreshEventsButton = document.getElementById("refreshEventsButton");
+const eventSelect = document.getElementById("eventSelect");
+const registrationForm = document.getElementById("registrationForm");
+const attendeeNameInput = document.getElementById("attendeeName");
+const emailInput = document.getElementById("email");
+const registerButton = document.getElementById("registerButton");
+const registrationMessage = document.getElementById("registrationMessage");
+const lookupForm = document.getElementById("lookupForm");
+const lookupEmailInput = document.getElementById("lookupEmail");
+const lookupMessage = document.getElementById("lookupMessage");
+const registrationsList = document.getElementById("registrationsList");
+const heroEventSearch = document.getElementById("heroEventSearch");
+const heroLocationSearch = document.getElementById("heroLocationSearch");
+const heroSearchButton = document.getElementById("heroSearchButton");
+const vendorInterestButton = document.getElementById("vendorInterestButton");
+const categoryButtons = document.querySelectorAll(".category-card");
 
 /* =========================================================
    APPLICATION STATE
@@ -71,12 +31,13 @@ const categoryButtons =
 let availableEvents = [];
 let filteredEvents = [];
 
-
 /* =========================================================
    HELPERS
 ========================================================= */
 
 function showMessage(element, message, type = "info") {
+    if (!element) return;
+
     element.textContent = message;
 
     element.classList.remove(
@@ -95,8 +56,9 @@ function showMessage(element, message, type = "info") {
     }
 }
 
-
 function hideMessage(element) {
+    if (!element) return;
+
     element.classList.add("hidden");
     element.textContent = "";
 
@@ -107,7 +69,6 @@ function hideMessage(element) {
     );
 }
 
-
 function escapeHtml(value) {
     return String(value)
         .replaceAll("&", "&amp;")
@@ -116,7 +77,6 @@ function escapeHtml(value) {
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
 }
-
 
 function formatDate(dateValue) {
     if (!dateValue) {
@@ -129,30 +89,18 @@ function formatDate(dateValue) {
         return dateValue;
     }
 
-    return new Intl.DateTimeFormat(
-        "en-GB",
-        {
-            day: "2-digit",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit"
-        }
-    ).format(date);
+    return new Intl.DateTimeFormat("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    }).format(date);
 }
 
-
 function getEventDate(event) {
-    /*
-     * Our native AnDTix event uses startDateTime.
-     * Some external events use dateLabel because
-     * the source only provides a display date.
-     */
-
     if (event.startDateTime) {
-        return formatDate(
-            event.startDateTime
-        );
+        return formatDate(event.startDateTime);
     }
 
     if (event.dateLabel) {
@@ -162,31 +110,20 @@ function getEventDate(event) {
     return "Date TBA";
 }
 
-
 function normaliseStatus(status) {
-    if (!status) {
-        return "AVAILABLE";
-    }
-
-    return String(status)
-        .toUpperCase();
+    return status
+        ? String(status).toUpperCase()
+        : "AVAILABLE";
 }
-
 
 function isExternalEvent(event) {
     return (
         event.externalEvent === true ||
-        normaliseStatus(event.status) ===
-        "EXTERNAL"
+        normaliseStatus(event.status) === "EXTERNAL"
     );
 }
 
-
 function detectCategory(event) {
-    /*
-     * Prefer the category stored in DynamoDB.
-     */
-
     if (
         event.category &&
         String(event.category).trim()
@@ -262,23 +199,17 @@ function detectCategory(event) {
     return "General";
 }
 
-
 async function readApiResponse(response) {
     const contentType =
-        response.headers.get(
-            "content-type"
-        ) || "";
+        response.headers.get("content-type") || "";
 
     if (
-        contentType.includes(
-            "application/json"
-        )
+        contentType.includes("application/json")
     ) {
         return response.json();
     }
 
-    const text =
-        await response.text();
+    const text = await response.text();
 
     return {
         message:
@@ -287,21 +218,24 @@ async function readApiResponse(response) {
     };
 }
 
-
 /* =========================================================
    LOAD EVENTS FROM AWS
 ========================================================= */
 
 async function loadEvents() {
-    eventsLoading.classList.remove(
-        "hidden"
-    );
+    if (eventsLoading) {
+        eventsLoading.classList.remove("hidden");
+    }
 
-    eventsList.innerHTML = "";
+    if (eventsList) {
+        eventsList.innerHTML = "";
+    }
 
     hideMessage(eventsError);
 
-    refreshEventsButton.disabled = true;
+    if (refreshEventsButton) {
+        refreshEventsButton.disabled = true;
+    }
 
     try {
         const response = await fetch(
@@ -309,9 +243,7 @@ async function loadEvents() {
         );
 
         const data =
-            await readApiResponse(
-                response
-            );
+            await readApiResponse(response);
 
         if (!response.ok) {
             throw new Error(
@@ -329,10 +261,7 @@ async function loadEvents() {
             ...availableEvents
         ];
 
-        renderEvents(
-            filteredEvents
-        );
-
+        renderEvents(filteredEvents);
         populateEventSelect();
 
     } catch (error) {
@@ -349,42 +278,43 @@ async function loadEvents() {
         );
 
     } finally {
-        eventsLoading.classList.add(
-            "hidden"
-        );
+        if (eventsLoading) {
+            eventsLoading.classList.add("hidden");
+        }
 
-        refreshEventsButton.disabled =
-            false;
+        if (refreshEventsButton) {
+            refreshEventsButton.disabled = false;
+        }
     }
 }
-
 
 /* =========================================================
    EVENT DISPLAY
 ========================================================= */
 
 function renderEvents(events) {
+    if (!eventsList) {
+        return;
+    }
+
     eventsList.innerHTML = "";
 
     if (events.length === 0) {
         eventsList.innerHTML = `
-            <div class="status-card">
-                No events matched your search.
-            </div>
-        `;
+      <div class="status-card">
+        No events matched your search.
+      </div>
+    `;
 
         return;
     }
-
 
     events.forEach((event) => {
         const external =
             isExternalEvent(event);
 
         const status =
-            normaliseStatus(
-                event.status
-            );
+            normaliseStatus(event.status);
 
         const category =
             detectCategory(event);
@@ -393,197 +323,166 @@ function renderEvents(events) {
             getEventDate(event);
 
         const card =
-            document.createElement(
-                "article"
-            );
+            document.createElement("article");
 
-        card.className =
-            "event-card";
-
-
-        /*
-         * External events have a gold badge.
-         * Native AnDTix events keep the green
-         * OPEN/AVAILABLE badge.
-         */
+        card.className = "event-card";
 
         const statusBadge =
             external
                 ? `
-                    <span
-                        class="event-status"
-                        style="
-                            background:#fff4d2;
-                            color:#9a6500;
-                        "
-                    >
-                        EXTERNAL EVENT
-                    </span>
-                `
+          <span
+            class="event-status"
+            style="
+              background:#fff4d2;
+              color:#9a6500;
+            "
+          >
+            EXTERNAL EVENT
+          </span>
+        `
                 : `
-                    <span
-                        class="${status === "LIMITED"
+          <span
+            class="${status === "LIMITED"
                     ? "event-status limited"
                     : "event-status"
                 }"
-                    >
-                        ${escapeHtml(status)}
-                    </span>
-                `;
-
-
-        /*
-         * External events open the original
-         * organizer/source page.
-         *
-         * AnDTix-owned events continue into
-         * our registration workflow.
-         */
+          >
+            ${escapeHtml(status)}
+          </span>
+        `;
 
         const actionButton =
             external
                 ? `
-                    <button
-                        type="button"
-                        class="event-select-button external-event-button"
-                        data-source-url="${escapeHtml(
+          <button
+            type="button"
+            class="event-select-button external-event-button"
+            data-source-url="${escapeHtml(
                     event.sourceUrl || ""
                 )}"
-                    >
-                        View Event →
-                    </button>
-                `
+          >
+            View Event →
+          </button>
+        `
                 : `
-                    <button
-                        type="button"
-                        class="event-select-button native-event-button"
-                        data-event-id="${escapeHtml(
+          <button
+            type="button"
+            class="event-select-button native-event-button"
+            data-event-id="${escapeHtml(
                     event.eventId || ""
                 )}"
-                    >
-                        Get Ticket →
-                    </button>
-                `;
-
+          >
+            Get Ticket →
+          </button>
+        `;
 
         const sourceLabel =
             external &&
                 event.sourceName
                 ? `
-                    <div
-                        style="
-                            padding:10px 22px 0;
-                            color:#8491a4;
-                            font-size:0.68rem;
-                        "
-                    >
-                        Listed from
-                        ${escapeHtml(
+          <div
+            style="
+              padding:10px 22px 0;
+              color:#8491a4;
+              font-size:0.68rem;
+            "
+          >
+            Listed from
+            ${escapeHtml(
                     event.sourceName
                 )}
-                    </div>
-                `
+          </div>
+        `
                 : "";
 
-
         card.innerHTML = `
-            <div class="event-card-top">
+      <div class="event-card-top">
 
-                <div>
+        <div>
 
-                    <div
-                        style="
-                            color:#ea7a19;
-                            font-size:0.67rem;
-                            font-weight:900;
-                            letter-spacing:0.08em;
-                            margin-bottom:7px;
-                        "
-                    >
-                        ${escapeHtml(
+          <div
+            style="
+              color:#ea7a19;
+              font-size:0.67rem;
+              font-weight:900;
+              letter-spacing:0.08em;
+              margin-bottom:7px;
+            "
+          >
+            ${escapeHtml(
             category.toUpperCase()
         )}
-                    </div>
+          </div>
 
-                    <h3>
-                        ${escapeHtml(
+          <h3>
+            ${escapeHtml(
             event.name ||
             "Untitled Event"
         )}
-                    </h3>
+          </h3>
 
-                </div>
+        </div>
 
-                ${statusBadge}
+        ${statusBadge}
 
-            </div>
+      </div>
 
+      <div class="event-meta">
 
-            <div class="event-meta">
-
-                <span>
-                    📍
-                    ${escapeHtml(
+        <span>
+          📍
+          ${escapeHtml(
             event.location ||
             "Location TBA"
         )}
-                </span>
+        </span>
 
-                <span>
-                    📅
-                    ${escapeHtml(
+        <span>
+          📅
+          ${escapeHtml(
             displayDate
         )}
-                </span>
+        </span>
 
-                ${!external &&
-                event.capacity !==
-                undefined
+        ${!external &&
+                event.capacity !== undefined
                 ? `
-                            <span>
-                                👥 Capacity:
-                                ${escapeHtml(
+              <span>
+                👥 Capacity:
+                ${escapeHtml(
                     String(
                         event.capacity
                     )
                 )}
-                            </span>
-                        `
+              </span>
+            `
                 : ""
             }
 
-            </div>
+      </div>
 
-
-            ${event.description
+      ${event.description
                 ? `
-                        <p class="event-description">
-                            ${escapeHtml(
+            <p class="event-description">
+              ${escapeHtml(
                     event.description
                 )}
-                        </p>
-                    `
+            </p>
+          `
                 : ""
             }
 
+      ${sourceLabel}
 
-            ${sourceLabel}
+      ${actionButton}
+    `;
 
-            ${actionButton}
-        `;
-
-
-        eventsList.appendChild(
-            card
-        );
+        eventsList.appendChild(card);
     });
 
-
     attachNativeEventButtons();
-
     attachExternalEventButtons();
 }
-
 
 /* =========================================================
    NATIVE ANDTIX EVENT BUTTONS
@@ -601,28 +500,34 @@ function attachNativeEventButtons() {
                 () => {
 
                     const eventId =
-                        button.dataset
-                            .eventId;
+                        button.dataset.eventId;
 
-                    eventSelect.value =
-                        eventId;
+                    if (eventSelect) {
+                        eventSelect.value =
+                            eventId;
+                    }
 
-                    document
-                        .querySelector(
+                    const bookingSection =
+                        document.querySelector(
                             ".booking-section"
-                        )
-                        .scrollIntoView({
-                            behavior:
-                                "smooth",
+                        );
 
-                            block:
-                                "center"
-                        });
+                    if (bookingSection) {
+                        bookingSection
+                            .scrollIntoView({
+                                behavior: "smooth",
+                                block: "center"
+                            });
+                    }
 
                     setTimeout(
                         () => {
-                            attendeeNameInput
-                                .focus();
+                            if (
+                                attendeeNameInput
+                            ) {
+                                attendeeNameInput
+                                    .focus();
+                            }
                         },
                         500
                     );
@@ -630,7 +535,6 @@ function attachNativeEventButtons() {
             );
         });
 }
-
 
 /* =========================================================
    EXTERNAL EVENT BUTTONS
@@ -669,35 +573,26 @@ function attachExternalEventButtons() {
         });
 }
 
-
 /* =========================================================
    REGISTRATION DROPDOWN
 ========================================================= */
 
 function populateEventSelect() {
+    if (!eventSelect) {
+        return;
+    }
+
     eventSelect.innerHTML = `
-        <option value="">
-            Select an event
-        </option>
-    `;
-
-
-    /*
-     * IMPORTANT:
-     *
-     * Only AnDTix-owned events appear in
-     * our registration dropdown.
-     *
-     * External Ghana events cannot be
-     * accidentally booked through AnDTix.
-     */
+    <option value="">
+      Select an event
+    </option>
+  `;
 
     const nativeEvents =
         availableEvents.filter(
             (event) =>
                 !isExternalEvent(event)
         );
-
 
     nativeEvents.forEach((event) => {
         const option =
@@ -719,22 +614,26 @@ function populateEventSelect() {
     });
 }
 
-
 /* =========================================================
    EVENT SEARCH
 ========================================================= */
 
 function searchEvents() {
     const searchTerm =
-        heroEventSearch.value
+        (
+            heroEventSearch?.value ||
+            ""
+        )
             .trim()
             .toLowerCase();
 
     const locationTerm =
-        heroLocationSearch.value
+        (
+            heroLocationSearch?.value ||
+            ""
+        )
             .trim()
             .toLowerCase();
-
 
     filteredEvents =
         availableEvents.filter(
@@ -752,13 +651,11 @@ function searchEvents() {
                         .join(" ")
                         .toLowerCase();
 
-
                 const location =
                     String(
                         event.location ||
                         ""
                     ).toLowerCase();
-
 
                 const matchesSearch =
                     !searchTerm ||
@@ -767,13 +664,11 @@ function searchEvents() {
                             searchTerm
                         );
 
-
                 const matchesLocation =
                     !locationTerm ||
                     location.includes(
                         locationTerm
                     );
-
 
                 return (
                     matchesSearch &&
@@ -782,56 +677,63 @@ function searchEvents() {
             }
         );
 
-
     renderEvents(
         filteredEvents
     );
 
+    const eventsSection =
+        document.getElementById(
+            "events"
+        );
 
-    document
-        .getElementById("events")
-        .scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
+    if (eventsSection) {
+        eventsSection
+            .scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+    }
 }
 
+if (heroSearchButton) {
+    heroSearchButton
+        .addEventListener(
+            "click",
+            searchEvents
+        );
+}
 
-heroSearchButton.addEventListener(
-    "click",
-    searchEvents
-);
+if (heroEventSearch) {
+    heroEventSearch
+        .addEventListener(
+            "keydown",
+            (event) => {
 
+                if (
+                    event.key === "Enter"
+                ) {
+                    event.preventDefault();
+                    searchEvents();
+                }
+            }
+        );
+}
 
-heroEventSearch.addEventListener(
-    "keydown",
-    (event) => {
+if (heroLocationSearch) {
+    heroLocationSearch
+        .addEventListener(
+            "keydown",
+            (event) => {
 
-        if (
-            event.key === "Enter"
-        ) {
-            event.preventDefault();
-
-            searchEvents();
-        }
-    }
-);
-
-
-heroLocationSearch.addEventListener(
-    "keydown",
-    (event) => {
-
-        if (
-            event.key === "Enter"
-        ) {
-            event.preventDefault();
-
-            searchEvents();
-        }
-    }
-);
-
+                if (
+                    event.key === "Enter"
+                ) {
+                    event.preventDefault();
+                    searchEvents();
+                }
+            }
+        );
+}
 
 /* =========================================================
    CATEGORY FILTERS
@@ -844,305 +746,299 @@ categoryButtons.forEach(
             "click",
             () => {
 
-                const category =
-                    button
-                        .querySelector(
-                            "strong"
-                        )
-                        .textContent
-                        .trim()
-                        .toLowerCase();
+                const label =
+                    button.querySelector(
+                        "strong"
+                    );
 
+                const category =
+                    label
+                        ? label.textContent
+                            .trim()
+                            .toLowerCase()
+                        : "";
 
                 filteredEvents =
                     availableEvents.filter(
                         (event) =>
-                            detectCategory(
-                                event
-                            )
+                            detectCategory(event)
                                 .toLowerCase() ===
                             category
                     );
-
 
                 renderEvents(
                     filteredEvents
                 );
 
-
-                document
-                    .getElementById(
+                const eventsSection =
+                    document.getElementById(
                         "events"
-                    )
-                    .scrollIntoView({
-                        behavior:
-                            "smooth",
+                    );
 
-                        block:
-                            "start"
-                    });
+                if (eventsSection) {
+                    eventsSection
+                        .scrollIntoView({
+                            behavior: "smooth",
+                            block: "start"
+                        });
+                }
             }
         );
     }
 );
-
 
 /* =========================================================
    REFRESH EVENTS
 ========================================================= */
 
-refreshEventsButton.addEventListener(
-    "click",
-    async () => {
+if (refreshEventsButton) {
+    refreshEventsButton
+        .addEventListener(
+            "click",
+            async () => {
 
-        heroEventSearch.value = "";
+                if (heroEventSearch) {
+                    heroEventSearch.value =
+                        "";
+                }
 
-        heroLocationSearch.value = "";
+                if (
+                    heroLocationSearch
+                ) {
+                    heroLocationSearch.value =
+                        "";
+                }
 
-        await loadEvents();
-    }
-);
-
+                await loadEvents();
+            }
+        );
+}
 
 /* =========================================================
    REGISTRATION
 ========================================================= */
 
-registrationForm.addEventListener(
-    "submit",
-    async (event) => {
+if (registrationForm) {
+    registrationForm
+        .addEventListener(
+            "submit",
+            async (event) => {
 
-        event.preventDefault();
+                event.preventDefault();
 
-        hideMessage(
-            registrationMessage
-        );
+                hideMessage(
+                    registrationMessage
+                );
 
+                const eventId =
+                    (
+                        eventSelect?.value ||
+                        ""
+                    ).trim();
 
-        const eventId =
-            eventSelect.value.trim();
+                const attendeeName =
+                    (
+                        attendeeNameInput
+                            ?.value ||
+                        ""
+                    ).trim();
 
-        const attendeeName =
-            attendeeNameInput
-                .value
-                .trim();
+                const email =
+                    (
+                        emailInput?.value ||
+                        ""
+                    )
+                        .trim()
+                        .toLowerCase();
 
-        const email =
-            emailInput
-                .value
-                .trim()
-                .toLowerCase();
+                if (
+                    !eventId ||
+                    !attendeeName ||
+                    !email
+                ) {
+                    showMessage(
+                        registrationMessage,
+                        "Please complete all registration fields.",
+                        "error"
+                    );
 
+                    return;
+                }
 
-        if (
-            !eventId ||
-            !attendeeName ||
-            !email
-        ) {
-            showMessage(
-                registrationMessage,
+                const selectedEvent =
+                    availableEvents.find(
+                        (item) =>
+                            item.eventId ===
+                            eventId
+                    );
 
-                "Please complete all registration fields.",
+                if (
+                    selectedEvent &&
+                    isExternalEvent(
+                        selectedEvent
+                    )
+                ) {
+                    showMessage(
+                        registrationMessage,
+                        "External events must be booked through the event organizer.",
+                        "error"
+                    );
 
-                "error"
-            );
+                    return;
+                }
 
-            return;
-        }
+                if (registerButton) {
+                    registerButton.disabled =
+                        true;
 
+                    registerButton
+                        .innerHTML =
+                        "Processing Registration...";
+                }
 
-        /*
-         * Extra frontend safety check:
-         * never submit an external event ID.
-         */
+                try {
+                    const response =
+                        await fetch(
+                            `${API_BASE_URL}/register`,
+                            {
+                                method: "POST",
 
-        const selectedEvent =
-            availableEvents.find(
-                (event) =>
-                    event.eventId ===
-                    eventId
-            );
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
 
+                                body:
+                                    JSON.stringify({
+                                        eventId,
+                                        attendeeName,
+                                        email
+                                    })
+                            }
+                        );
 
-        if (
-            selectedEvent &&
-            isExternalEvent(
-                selectedEvent
-            )
-        ) {
-            showMessage(
-                registrationMessage,
+                    const data =
+                        await readApiResponse(
+                            response
+                        );
 
-                "External events must be booked through the event organizer.",
-
-                "error"
-            );
-
-            return;
-        }
-
-
-        registerButton.disabled =
-            true;
-
-        registerButton.innerHTML =
-            "Processing Registration...";
-
-
-        try {
-            const response =
-                await fetch(
-                    `${API_BASE_URL}/register`,
-                    {
-                        method:
-                            "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify({
-                                eventId,
-                                attendeeName,
-                                email
-                            })
+                    if (!response.ok) {
+                        throw new Error(
+                            data.message ||
+                            "Registration could not be completed."
+                        );
                     }
-                );
 
+                    const registrationId =
+                        data.registration
+                            ?.registrationId;
 
-            const data =
-                await readApiResponse(
-                    response
-                );
+                    let successMessage =
+                        "Your registration was successful.";
 
+                    if (registrationId) {
+                        successMessage +=
+                            ` Ticket reference: ${registrationId}`;
+                    }
 
-            if (!response.ok) {
-                throw new Error(
-                    data.message ||
-                    "Registration could not be completed."
-                );
-            }
+                    showMessage(
+                        registrationMessage,
+                        successMessage,
+                        "success"
+                    );
 
+                    if (
+                        lookupEmailInput
+                    ) {
+                        lookupEmailInput.value =
+                            email;
+                    }
 
-            const registrationId =
-                data.registration
-                    ?.registrationId;
+                    registrationForm
+                        .reset();
 
+                    await loadRegistrations(
+                        email
+                    );
 
-            let successMessage =
-                "Your registration was successful.";
+                    const ticketsSection =
+                        document.getElementById(
+                            "tickets"
+                        );
 
+                    if (ticketsSection) {
+                        ticketsSection
+                            .scrollIntoView({
+                                behavior: "smooth",
+                                block: "center"
+                            });
+                    }
 
-            if (registrationId) {
-                successMessage +=
-                    ` Ticket reference: ${registrationId}`;
-            }
+                } catch (error) {
+                    console.error(
+                        "Registration failed:",
+                        error
+                    );
 
+                    showMessage(
+                        registrationMessage,
+                        error.message ||
+                        "Registration could not be completed.",
+                        "error"
+                    );
 
-            showMessage(
-                registrationMessage,
+                } finally {
+                    if (registerButton) {
+                        registerButton.disabled =
+                            false;
 
-                successMessage,
-
-                "success"
-            );
-
-
-            lookupEmailInput.value =
-                email;
-
-
-            registrationForm.reset();
-
-
-            await loadRegistrations(
-                email
-            );
-
-
-            document
-                .getElementById(
-                    "tickets"
-                )
-                .scrollIntoView({
-                    behavior:
-                        "smooth",
-
-                    block:
-                        "center"
-                });
-
-
-        } catch (error) {
-            console.error(
-                "Registration failed:",
-                error
-            );
-
-
-            showMessage(
-                registrationMessage,
-
-                error.message ||
-                "Registration could not be completed.",
-
-                "error"
-            );
-
-
-        } finally {
-            registerButton.disabled =
-                false;
-
-
-            registerButton.innerHTML = `
+                        registerButton
+                            .innerHTML = `
                 Complete Registration
                 <span>→</span>
-            `;
-        }
-    }
-);
-
+              `;
+                    }
+                }
+            }
+        );
+}
 
 /* =========================================================
    REGISTRATION LOOKUP
 ========================================================= */
 
-lookupForm.addEventListener(
-    "submit",
-    async (event) => {
+if (lookupForm) {
+    lookupForm.addEventListener(
+        "submit",
+        async (event) => {
 
-        event.preventDefault();
+            event.preventDefault();
 
+            const email =
+                (
+                    lookupEmailInput
+                        ?.value ||
+                    ""
+                )
+                    .trim()
+                    .toLowerCase();
 
-        const email =
-            lookupEmailInput
-                .value
-                .trim()
-                .toLowerCase();
+            if (!email) {
+                showMessage(
+                    lookupMessage,
+                    "Please enter an email address.",
+                    "error"
+                );
 
+                return;
+            }
 
-        if (!email) {
-            showMessage(
-                lookupMessage,
-
-                "Please enter an email address.",
-
-                "error"
+            await loadRegistrations(
+                email
             );
-
-            return;
         }
-
-
-        await loadRegistrations(
-            email
-        );
-    }
-);
-
+    );
+}
 
 async function loadRegistrations(
     email
@@ -1151,13 +1047,13 @@ async function loadRegistrations(
         lookupMessage
     );
 
-
-    registrationsList.innerHTML = `
-        <div class="status-card">
-            Loading your tickets...
-        </div>
+    if (registrationsList) {
+        registrationsList.innerHTML = `
+      <div class="status-card">
+        Loading your tickets...
+      </div>
     `;
-
+    }
 
     try {
         const encodedEmail =
@@ -1165,18 +1061,15 @@ async function loadRegistrations(
                 email
             );
 
-
         const response =
             await fetch(
                 `${API_BASE_URL}/registrations/${encodedEmail}`
             );
 
-
         const data =
             await readApiResponse(
                 response
             );
-
 
         if (!response.ok) {
             throw new Error(
@@ -1185,7 +1078,6 @@ async function loadRegistrations(
             );
         }
 
-
         const registrations =
             Array.isArray(
                 data.registrations
@@ -1193,12 +1085,10 @@ async function loadRegistrations(
                 ? data.registrations
                 : [];
 
-
         renderRegistrations(
             registrations,
             email
         );
-
 
     } catch (error) {
         console.error(
@@ -1206,22 +1096,21 @@ async function loadRegistrations(
             error
         );
 
-
-        registrationsList.innerHTML =
-            "";
-
+        if (
+            registrationsList
+        ) {
+            registrationsList.innerHTML =
+                "";
+        }
 
         showMessage(
             lookupMessage,
-
             error.message ||
             "Unable to retrieve registrations.",
-
             "error"
         );
     }
 }
-
 
 /* =========================================================
    DISPLAY TICKETS
@@ -1231,28 +1120,28 @@ function renderRegistrations(
     registrations,
     email
 ) {
-    registrationsList.innerHTML = "";
+    if (!registrationsList) {
+        return;
+    }
 
+    registrationsList.innerHTML =
+        "";
 
     if (
         registrations.length === 0
     ) {
         showMessage(
             lookupMessage,
-
             "No active tickets were found for this email address.",
-
             "info"
         );
 
         return;
     }
 
-
     hideMessage(
         lookupMessage
     );
-
 
     registrations.forEach(
         (registration) => {
@@ -1262,79 +1151,72 @@ function renderRegistrations(
                     "div"
                 );
 
-
             item.className =
                 "registration-item";
 
-
             item.innerHTML = `
-                <div>
+        <div>
 
-                    <h3>
-                        🎟️
-                        ${escapeHtml(
+          <h3>
+            🎟️
+            ${escapeHtml(
                 registration.eventName ||
                 registration.eventId ||
                 "AnDTix Event"
             )}
-                    </h3>
+          </h3>
 
-                    <div
-                        class="registration-details"
-                    >
+          <div
+            class="registration-details"
+          >
 
-                        <div>
-                            Status:
-                            <strong>
-                                ${escapeHtml(
+            <div>
+              Status:
+              <strong>
+                ${escapeHtml(
                 registration.status ||
                 "CONFIRMED"
             )}
-                            </strong>
-                        </div>
+              </strong>
+            </div>
 
-                        <div>
-                            Registered:
-                            ${escapeHtml(
+            <div>
+              Registered:
+              ${escapeHtml(
                 formatDate(
                     registration.registeredAt
                 )
             )}
-                        </div>
+            </div>
 
-                        <div>
-                            Ticket Reference:
-                            ${escapeHtml(
+            <div>
+              Ticket Reference:
+              ${escapeHtml(
                 registration.registrationId ||
                 ""
             )}
-                        </div>
+            </div>
 
-                    </div>
+          </div>
 
-                </div>
+        </div>
 
-
-                <button
-                    type="button"
-                    class="cancel-button"
-                    data-registration-id="${escapeHtml(
+        <button
+          type="button"
+          class="cancel-button"
+          data-registration-id="${escapeHtml(
                 registration.registrationId ||
                 ""
             )}"
-                >
-                    Cancel Ticket
-                </button>
-            `;
-
+        >
+          Cancel Ticket
+        </button>
+      `;
 
             registrationsList
-                .appendChild(
-                    item
-                );
+                .appendChild(item);
         }
     );
-
 
     document
         .querySelectorAll(
@@ -1348,10 +1230,8 @@ function renderRegistrations(
                     async () => {
 
                         const registrationId =
-                            button
-                                .dataset
+                            button.dataset
                                 .registrationId;
-
 
                         await cancelRegistration(
                             registrationId,
@@ -1363,7 +1243,6 @@ function renderRegistrations(
             }
         );
 }
-
 
 /* =========================================================
    CANCEL REGISTRATION
@@ -1378,23 +1257,19 @@ async function cancelRegistration(
         return;
     }
 
-
     const confirmed =
         window.confirm(
             "Are you sure you want to cancel this ticket?"
         );
 
-
     if (!confirmed) {
         return;
     }
-
 
     button.disabled = true;
 
     button.textContent =
         "Cancelling...";
-
 
     try {
         const response =
@@ -1403,17 +1278,14 @@ async function cancelRegistration(
                     registrationId
                 )}`,
                 {
-                    method:
-                        "DELETE"
+                    method: "DELETE"
                 }
             );
-
 
         const data =
             await readApiResponse(
                 response
             );
-
 
         if (!response.ok) {
             throw new Error(
@@ -1422,16 +1294,13 @@ async function cancelRegistration(
             );
         }
 
-
         hideMessage(
             registrationMessage
         );
 
-
         await loadRegistrations(
             email
         );
-
 
     } catch (error) {
         console.error(
@@ -1439,41 +1308,33 @@ async function cancelRegistration(
             error
         );
 
-
         showMessage(
             lookupMessage,
-
             error.message ||
             "Unable to cancel registration.",
-
             "error"
         );
 
-
-        button.disabled =
-            false;
-
+        button.disabled = false;
 
         button.textContent =
             "Cancel Ticket";
     }
 }
 
-
 /* =========================================================
    VENDOR / ORGANIZER
 ========================================================= */
 
-vendorInterestButton.addEventListener(
-    "click",
-    () => {
-
-        window.alert(
-            "The AnDTix Organizer Portal is coming next. Organizers will be able to submit events, sell tickets, promote events and manage attendees."
-        );
-    }
-);
-
+if (vendorInterestButton) {
+    vendorInterestButton.addEventListener(
+        "click",
+        () => {
+            window.location.href =
+                "organizer.html";
+        }
+    );
+}
 
 /* =========================================================
    INITIAL PAGE LOAD
