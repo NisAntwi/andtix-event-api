@@ -2,41 +2,23 @@
 
 AnDTix is a cloud-native event discovery, registration and organizer event-listing platform built on AWS.
 
-The project demonstrates how a modern event platform can use serverless AWS services, automated CI/CD, monitoring, security controls and cost management to provide a scalable foundation for event discovery and ticket registration.
+It demonstrates how serverless AWS services, Infrastructure as Code, CI/CD, monitoring, security controls and cost management can be combined to build and operate a modern event platform.
 
-AnDTix was developed as a practical AWS Cloud Computing capstone project.
-
----
-
-## Project Overview
-
-AnDTix allows users to:
-
-- Discover upcoming events
-- Search events by name and location
-- Browse events by category
-- Register for AnDTix-hosted events
-- View existing ticket registrations
-- Cancel registrations
-- Access selected external Ghanaian event listings
-- Submit events through an Organizer Portal
-- Send organizer submissions for administrative review
-- Publish approved organizer events automatically
-- Monitor the application using Amazon CloudWatch
-- Receive monitoring alerts through Amazon SNS
-- Control AWS spending using AWS Budgets
-
-The application is designed around a serverless AWS architecture to reduce infrastructure management while supporting scalability.
+AnDTix was developed as an **AWS Cloud Computing Capstone Project**.
 
 ---
 
-## Live API
+## 🌐 Live Application
 
-The deployed Amazon API Gateway endpoint is:
+### Live Website
 
-```text
-https://1y36equfk9.execute-api.us-east-1.amazonaws.com
-```
+**https://d1ikp9n3ouohir.cloudfront.net/**
+
+The frontend is hosted on Amazon S3 and delivered securely through Amazon CloudFront.
+
+### Live API
+
+**https://1y36equfk9.execute-api.us-east-1.amazonaws.com**
 
 Example:
 
@@ -44,197 +26,54 @@ Example:
 GET https://1y36equfk9.execute-api.us-east-1.amazonaws.com/events
 ```
 
-The frontend is hosted using Amazon S3 and distributed through Amazon CloudFront.
+> The API Gateway base URL does not define a `/` route. Use one of the application routes such as `/events`, `/register` or `/organizer/events`.
 
 ---
 
-## Main Features
+## 📌 Project Overview
 
-### 1. Event Discovery
+AnDTix provides one platform for attendees to discover events and for organizers to submit events for publication.
 
-Visitors can browse events available through AnDTix.
+### Attendees can:
 
-Event cards display information such as:
+- Discover upcoming events
+- Search events by name
+- Search events by location
+- Browse events by category
+- View native AnDTix events
+- View selected external Ghanaian event listings
+- Register for AnDTix-hosted events
+- Retrieve existing registrations
+- Cancel registrations
 
-- Event name
-- Location
-- Date and time
-- Category
-- Capacity
-- Description
-- Event status
-- Listing type
+### Event organizers can:
 
-The homepage also supports searching by event name and location.
+- Access the Organizer Portal
+- Enter organizer details
+- Submit event information
+- Choose free or paid event options
+- Set ticket price and capacity
+- Select standard or featured listing
+- Submit events for administrative review
+- Have approved events published to the public platform
 
----
+### Platform operations include:
 
-### 2. Event Categories
-
-Users can browse events using categories such as:
-
-- Music
-- Technology
-- Business
-- Arts
-- Sports
-- Lifestyle
-
----
-
-### 3. External Event Listings
-
-AnDTix can display selected external Ghanaian events alongside native AnDTix events.
-
-External events are clearly identified as:
-
-```text
-EXTERNAL EVENT
-```
-
-Instead of registering through AnDTix, users are redirected to the original event source.
-
-This keeps external listings separate from AnDTix-managed registrations.
+- Automated CI/CD with GitHub Actions
+- AWS OIDC authentication
+- CloudWatch logging
+- CloudWatch error monitoring
+- Amazon SNS email notifications
+- AWS Budget monitoring
+- 14-day CloudWatch log retention
 
 ---
 
-### 4. Event Registration
-
-For native AnDTix events, attendees can register using:
-
-- Event
-- Attendee name
-- Email address
-
-Registration requests are processed by AWS Lambda and stored in Amazon DynamoDB.
-
----
-
-### 5. My Tickets
-
-Users can retrieve their existing registrations using their email address.
-
-The application displays relevant ticket and registration information.
-
----
-
-### 6. Ticket Cancellation
-
-Users can cancel an existing event registration.
-
-The cancellation request is processed by a dedicated AWS Lambda function and the registration record is updated in DynamoDB.
-
----
-
-## Organizer Portal
-
-AnDTix includes a dedicated Organizer Portal where event organizers can submit events for review.
-
-The organizer form collects information including:
-
-- Organizer/company name
-- Contact person
-- Email address
-- Phone number
-- Event name
-- Event description
-- Event category
-- Venue
-- City
-- Country
-- Event date
-- Event time
-- Pricing type
-- Ticket price
-- Event capacity
-- Listing type
-
-Organizer submissions are not published immediately.
-
-New submissions are initially stored with the status:
-
-```text
-PENDING_APPROVAL
-```
-
----
-
-## Organizer Approval Workflow
-
-The organizer publishing workflow follows this process:
-
-```text
-Organizer Portal
-      |
-      v
-POST /organizer/events
-      |
-      v
-Amazon API Gateway
-      |
-      v
-SubmitEvent Lambda
-      |
-      v
-EventSubmissions DynamoDB Table
-      |
-      v
-PENDING_APPROVAL
-      |
-      v
-Private Admin Approval Lambda
-      |
-      v
-Events DynamoDB Table
-      |
-      v
-OPEN
-      |
-      v
-Displayed on AnDTix Homepage
-```
-
-The approval Lambda is intentionally not exposed as a public API endpoint.
-
-Administrative approval is performed through authenticated AWS access.
-
-This prevents unauthorized users from directly publishing organizer events.
-
----
-
-## Verified Live Organizer Flow
-
-The complete organizer publishing workflow has been tested successfully:
-
-```text
-Live Organizer Portal
-        ↓
-Event Submitted
-        ↓
-PENDING_APPROVAL
-        ↓
-Admin Approval Lambda
-        ↓
-Event Published
-        ↓
-Status = OPEN
-        ↓
-Public Events API
-        ↓
-Live AnDTix Homepage
-```
-
-A live organizer test event was successfully submitted, approved and displayed through the public AnDTix events API and frontend.
-
----
-
-## AWS Architecture
+## 🏗️ AWS Architecture
 
 ![AnDTix AWS Architecture](docs/images/andtix-architecture.png)
 
-AnDTix uses a serverless architecture built around AWS managed services.
-
-### Architecture Flow
+### High-Level Architecture
 
 ```text
 Users
@@ -256,84 +95,88 @@ AWS Lambda
 Amazon DynamoDB
 ```
 
-The architecture also includes:
-
-- GitHub Actions CI/CD
-- AWS OIDC authentication
-- Amazon CloudWatch monitoring
-- CloudWatch alarms
-- Amazon SNS email alerts
-- AWS Budgets cost monitoring
-- Private administrator event approval
-
----
-
-## Amazon API Gateway
-
-Amazon API Gateway provides the HTTP API for the application.
-
-Current routes include:
+Additional operational services include:
 
 ```text
-GET    /events
-POST   /register
-GET    /registrations/{email}
-DELETE /registration/{id}
-POST   /organizer/events
+GitHub
+   |
+   v
+GitHub Actions
+   |
+   v
+AWS OIDC
+   |
+   v
+AWS SAM Deployment
 ```
 
-The organizer approval Lambda is private and does not have a public API route.
-
----
-
-## AWS Lambda
-
-The backend currently contains six Lambda functions:
+and:
 
 ```text
-GetEventsFunction
-RegisterAttendeeFunction
-GetRegistrationsFunction
-CancelRegistrationFunction
-SubmitEventFunction
-ApproveEventFunction
+AWS Lambda
+    |
+    v
+Amazon CloudWatch
+    |
+    v
+CloudWatch Alarm
+    |
+    v
+Amazon SNS
+    |
+    v
+Email Notification
 ```
-
-Each Lambda has a focused responsibility within the platform.
-
-### GetEventsFunction
-
-Retrieves public events from DynamoDB.
-
-### RegisterAttendeeFunction
-
-Creates attendee event registrations.
-
-### GetRegistrationsFunction
-
-Retrieves registrations associated with an email address.
-
-### CancelRegistrationFunction
-
-Processes ticket cancellation requests.
-
-### SubmitEventFunction
-
-Accepts organizer event submissions and stores them for administrative review.
-
-### ApproveEventFunction
-
-Privately approves organizer submissions and publishes approved events to the public Events table.
 
 ---
 
-## Amazon DynamoDB
+# ✨ Core Features
 
-AnDTix uses separate DynamoDB tables for different application workloads.
+## 1. Event Discovery
 
-### Events Table
+Visitors can browse events available through AnDTix.
 
-Stores publicly available events.
+Event cards can display:
+
+- Event name
+- Description
+- Location
+- Date and time
+- Category
+- Capacity
+- Event status
+- Listing type
+
+---
+
+## 2. Event Search
+
+The homepage supports searching by:
+
+- Event name
+- Location
+- Event information
+
+This allows visitors to find relevant events more quickly.
+
+---
+
+## 3. Event Categories
+
+Events can be browsed using categories such as:
+
+- Music
+- Technology
+- Business
+- Arts
+- Sports
+- Lifestyle
+
+---
+
+## 4. Native AnDTix Events
+
+Native events can be registered for directly through AnDTix.
 
 Typical public event status:
 
@@ -341,35 +184,208 @@ Typical public event status:
 OPEN
 ```
 
----
-
-### Registrations Table
-
-Stores attendee registrations.
-
-The table includes an `EmailIndex` Global Secondary Index to support registration retrieval by email.
+Users can select the event and complete the registration form.
 
 ---
 
-### Event Submissions Table
+## 5. External Event Listings
 
-Stores organizer event submissions before approval.
+AnDTix also displays selected external Ghanaian events.
 
-Typical initial status:
+External listings are clearly identified as:
+
+```text
+EXTERNAL EVENT
+```
+
+Users are redirected to the original event source instead of registering through AnDTix.
+
+This keeps third-party events separate from native AnDTix registrations.
+
+---
+
+## 6. Event Registration
+
+Users can register for supported events using:
+
+- Event
+- Full name
+- Email address
+
+Registration requests are processed by AWS Lambda and stored in Amazon DynamoDB.
+
+---
+
+## 7. My Tickets
+
+Users can retrieve existing registrations using their email address.
+
+The application queries the registration database and displays matching registration information.
+
+---
+
+## 8. Ticket Cancellation
+
+Users can cancel an existing registration.
+
+A dedicated Lambda function handles the cancellation request and updates the registration record.
+
+---
+
+# 🏢 Organizer Portal
+
+AnDTix includes a dedicated Organizer Portal for event submissions.
+
+The portal is available from the live website through the **List Your Event** option.
+
+Organizer submissions collect:
+
+### Organizer Details
+
+- Organizer/company name
+- Contact person
+- Email address
+- Phone number
+
+### Event Details
+
+- Event name
+- Description
+- Category
+- Venue
+- City
+- Country
+- Event date
+- Start time
+
+### Ticketing
+
+- Free or paid event
+- Ticket price
+- Event capacity
+
+### Promotion
+
+- Standard listing
+- Featured promotion
+
+---
+
+## Organizer Submission Status
+
+New organizer submissions are not immediately displayed publicly.
+
+They are first stored with:
 
 ```text
 PENDING_APPROVAL
 ```
 
-After administrator approval, the event is published into the public Events table.
+This provides a controlled publishing process.
+
+---
+
+# 🔐 Organizer Approval Workflow
+
+The complete event publishing workflow is:
+
+```text
+Organizer Portal
+      |
+      v
+POST /organizer/events
+      |
+      v
+Amazon API Gateway
+      |
+      v
+SubmitEvent Lambda
+      |
+      v
+EventSubmissions Table
+      |
+      v
+PENDING_APPROVAL
+      |
+      v
+Private ApproveEvent Lambda
+      |
+      v
+Events Table
+      |
+      v
+OPEN
+      |
+      v
+Public Events API
+      |
+      v
+AnDTix Homepage
+```
+
+The approval Lambda is intentionally **not exposed through a public API endpoint**.
+
+Administrative approval is performed through authenticated AWS access.
+
+This prevents public users from approving their own submissions.
+
+---
+
+## ✅ Verified Live Organizer Workflow
+
+The complete organizer workflow was tested successfully using the deployed platform:
+
+```text
+Live Organizer Portal
+        ↓
+Submit Event
+        ↓
+EventSubmissions DynamoDB Table
+        ↓
+PENDING_APPROVAL
+        ↓
+Private Admin Approval
+        ↓
+Events DynamoDB Table
+        ↓
+OPEN
+        ↓
+GET /events
+        ↓
+Live AnDTix Homepage
+```
+
+The approved test event successfully appeared on the live public website.
+
+---
+
+# ☁️ AWS Services Used
+
+## Amazon CloudFront
+
+CloudFront provides the public HTTPS distribution for the AnDTix frontend.
+
+Live website:
+
+```text
+https://d1ikp9n3ouohir.cloudfront.net/
+```
+
+Benefits include:
+
+- HTTPS delivery
+- Edge content distribution
+- S3 frontend delivery
+- Cache management
+- Improved frontend performance
 
 ---
 
 ## Amazon S3
 
-Amazon S3 stores the static frontend.
+Amazon S3 stores the static frontend application.
 
-Main frontend files include:
+Main frontend structure:
 
 ```text
 frontend/
@@ -384,19 +400,186 @@ frontend/
 
 ---
 
-## Amazon CloudFront
+## Amazon API Gateway
 
-Amazon CloudFront distributes the AnDTix frontend securely over HTTPS.
+Amazon API Gateway provides the HTTP API used by the frontend.
 
-CloudFront sits in front of the Amazon S3 static frontend and improves content delivery.
+### Current Routes
+
+| Method | Route | Purpose |
+|---|---|---|
+| GET | `/events` | Retrieve public events |
+| POST | `/register` | Register an attendee |
+| GET | `/registrations/{email}` | Retrieve registrations |
+| DELETE | `/registration/{id}` | Cancel a registration |
+| POST | `/organizer/events` | Submit an organizer event |
+
+The private event approval Lambda does not have a public API route.
 
 ---
 
-## CI/CD Pipeline
+# ⚡ AWS Lambda Functions
+
+The backend currently contains six Lambda functions.
+
+```text
+GetEventsFunction
+RegisterAttendeeFunction
+GetRegistrationsFunction
+CancelRegistrationFunction
+SubmitEventFunction
+ApproveEventFunction
+```
+
+## GetEventsFunction
+
+Retrieves public events from the Events DynamoDB table.
+
+## RegisterAttendeeFunction
+
+Processes attendee registrations and stores registration information.
+
+## GetRegistrationsFunction
+
+Retrieves registrations associated with an email address.
+
+## CancelRegistrationFunction
+
+Processes registration cancellation requests.
+
+## SubmitEventFunction
+
+Receives Organizer Portal submissions and stores them as pending events.
+
+## ApproveEventFunction
+
+Privately approves organizer submissions and publishes approved events.
+
+---
+
+# 🗄️ Amazon DynamoDB
+
+AnDTix uses separate DynamoDB tables for different workloads.
+
+## Events Table
+
+Stores publicly available events.
+
+Example status:
+
+```text
+OPEN
+```
+
+---
+
+## Registrations Table
+
+Stores attendee registration records.
+
+The table includes an:
+
+```text
+EmailIndex
+```
+
+Global Secondary Index.
+
+This supports retrieving registrations by attendee email.
+
+---
+
+## EventSubmissions Table
+
+Stores organizer submissions before publication.
+
+Initial status:
+
+```text
+PENDING_APPROVAL
+```
+
+After approval, an event is published into the Events table.
+
+---
+
+# 🎨 Frontend
+
+The frontend is built using:
+
+```text
+HTML
+CSS
+JavaScript
+```
+
+### Main Pages
+
+```text
+frontend/index.html
+frontend/organizer.html
+```
+
+### JavaScript
+
+```text
+frontend/app.js
+frontend/organizer.js
+```
+
+### Styling
+
+```text
+frontend/style.css
+```
+
+---
+
+## Homepage Experience
+
+The current live homepage includes:
+
+- Sticky navigation
+- Modern event discovery hero
+- Event search
+- Category browsing
+- Featured event display
+- Native event cards
+- External event listings
+- Registration section
+- My Tickets lookup
+- Organizer promotion section
+- Serverless AWS technology section
+- Founder section
+- Call-to-action section
+- Responsive footer
+
+---
+
+# 💳 Payment-Ready Design
+
+The Organizer Portal includes interface elements for future payment support.
+
+The design references payment methods such as:
+
+- Mobile Money
+- Visa
+- Mastercard
+- Payment gateway integration
+
+However:
+
+> **Live payment processing has not yet been implemented.**
+
+Payment gateway integration remains a future production enhancement.
+
+---
+
+# 🚀 CI/CD Pipeline
 
 AnDTix uses GitHub Actions for Continuous Integration and Continuous Deployment.
 
-The project contains:
+Workflow files:
 
 ```text
 .github/workflows/ci.yml
@@ -407,9 +590,7 @@ The project contains:
 
 ## Continuous Integration
 
-The CI pipeline performs automated code and infrastructure checks.
-
-Core checks include:
+The CI workflow performs automated checks including:
 
 ```bash
 ruff check .
@@ -418,24 +599,18 @@ sam validate
 sam build
 ```
 
-The final local verification completed successfully:
+These checks help identify:
 
-```text
-Ruff          PASSED
-Pytest        18 PASSED
-SAM Validate  PASSED
-SAM Build     PASSED
-```
-
-The same project is also validated automatically through GitHub Actions.
+- Python code quality problems
+- Unit test failures
+- Invalid SAM templates
+- Build problems
 
 ---
 
 ## Continuous Deployment
 
-Changes pushed to the `main` branch trigger the deployment workflow.
-
-Deployment flow:
+Changes pushed to the `main` branch trigger automated AWS deployment.
 
 ```text
 Developer
@@ -449,40 +624,46 @@ GitHub
     v
 GitHub Actions
     |
-    +------ Continuous Integration
-    |
-    +------ AWS OIDC Authentication
+    v
+AWS OIDC Authentication
     |
     v
-AWS SAM Build
+AWS SAM
     |
     v
 AWS Deployment
 ```
 
+The final GitHub Actions runs were verified successfully for both:
+
+```text
+AnDTix CI
+Deploy AnDTix to AWS
+```
+
 ---
 
-## GitHub OIDC Security
+# 🔑 GitHub OIDC Authentication
 
-GitHub Actions authenticates with AWS using OpenID Connect.
+GitHub Actions authenticates with AWS through OpenID Connect.
 
-This allows GitHub Actions to obtain temporary AWS credentials instead of storing permanent AWS access keys inside the repository.
+This avoids storing permanent AWS deployment access keys in GitHub.
 
 Benefits include:
 
-- No long-lived AWS deployment keys in GitHub
 - Temporary AWS credentials
-- Improved CI/CD security
-- Controlled IAM permissions
-- Automated deployment authentication
+- No long-lived AWS access keys
+- Improved deployment security
+- IAM-controlled permissions
+- Automated authentication
 
 ---
 
-## Monitoring
+# 📊 Monitoring and Observability
 
 Amazon CloudWatch is used to monitor the AnDTix Lambda environment.
 
-CloudWatch log groups are active for:
+CloudWatch log groups exist for:
 
 ```text
 ApproveEventFunction
@@ -497,21 +678,23 @@ SubmitEventFunction
 
 ## CloudWatch Log Retention
 
-All AnDTix Lambda CloudWatch log groups are configured with:
+All AnDTix Lambda log groups are configured with:
 
 ```text
-Retention: 14 days
+14 days
 ```
 
-This prevents logs from remaining indefinitely and helps control CloudWatch storage costs.
+retention.
+
+This prevents log data from being retained indefinitely and helps control storage costs.
 
 ---
 
-## CloudWatch Alarm
+# 🚨 CloudWatch Error Alarm
 
-A CloudWatch error alarm has been configured for the registration Lambda.
+An error alarm monitors the registration Lambda.
 
-Alarm name:
+Alarm:
 
 ```text
 AnDTix-RegisterAttendee-Errors
@@ -522,10 +705,11 @@ Configuration:
 ```text
 Namespace: AWS/Lambda
 Metric: Errors
-Threshold: >= 1 error
+Statistic: Sum
 Period: 300 seconds
 Evaluation Periods: 1
-Missing Data: notBreaching
+Threshold: >= 1
+Treat Missing Data: notBreaching
 ```
 
 The alarm was verified in:
@@ -538,7 +722,7 @@ state after configuration.
 
 ---
 
-## Amazon SNS Monitoring Alerts
+# 📧 Amazon SNS Alerts
 
 The CloudWatch alarm is connected to an Amazon SNS topic:
 
@@ -561,247 +745,87 @@ CloudWatch Alarm
 Amazon SNS
         |
         v
-Email Notification
+Email Alert
 ```
 
-The SNS email system was tested successfully using an actual monitoring notification.
+The SNS configuration was tested successfully.
 
-The received test message confirmed:
+A real test email with the subject:
 
 ```text
-AnDTix monitoring is configured successfully.
-This is a test notification from Amazon SNS.
+AnDTix Monitoring Test
 ```
+
+was successfully delivered.
 
 ---
 
-## AWS Cost Monitoring
+# 💰 AWS Cost Monitoring
 
-AnDTix includes an AWS monthly cost budget.
+AnDTix includes AWS Budget monitoring.
 
 Budget configuration:
 
-```text
-Name: AnDTix-Monthly-Budget
-Budget Type: COST
-Time Unit: MONTHLY
-Limit: $5 USD
-```
+| Setting | Value |
+|---|---|
+| Budget Name | `AnDTix-Monthly-Budget` |
+| Type | COST |
+| Period | MONTHLY |
+| Limit | $5 USD |
+| Alert Threshold | 80% |
+| Alert Value | $4 |
 
-A notification is configured when actual monthly spending exceeds:
-
-```text
-80%
-```
-
-This corresponds to:
-
-```text
-$4 of the $5 monthly budget
-```
-
-The budget notification uses email delivery.
+The budget notification is configured to send an email when actual monthly AWS spending exceeds the configured threshold.
 
 ---
 
-## Security Measures
+# 🛡️ Security Controls
 
-The AnDTix project includes several security controls.
+The project includes several security measures.
 
-### GitHub OIDC Authentication
+## AWS OIDC
 
-GitHub Actions uses temporary AWS credentials rather than permanent AWS access keys.
+GitHub Actions uses temporary AWS credentials.
 
-### Private Administrative Approval
+## Private Event Approval
 
-The event approval Lambda is not publicly exposed through API Gateway.
+The approval Lambda is not exposed publicly through API Gateway.
 
-### DynamoDB Encryption
+## DynamoDB Encryption
 
-DynamoDB server-side encryption is enabled for application tables.
+Server-side encryption is enabled for DynamoDB resources.
 
-### HTTPS Delivery
+## HTTPS
 
-CloudFront provides HTTPS access to the frontend.
+The frontend is delivered through HTTPS using Amazon CloudFront.
 
-### Separate Submission Storage
+## Separate Submission Storage
 
-Pending organizer submissions are stored separately from public events.
+Pending organizer submissions are separated from public events.
 
-Only approved events are published to the Events table.
+## Organizer Privacy
 
-### Organizer Privacy
+Organizer contact information is stored in the submissions workflow and is not intentionally exposed through the public events API.
 
-Sensitive organizer submission details are kept in the submissions workflow and are not intentionally exposed through the public Events API.
+## Monitoring
 
-### CloudWatch Monitoring
+CloudWatch provides operational visibility into Lambda activity.
 
-Lambda activity is logged through Amazon CloudWatch.
+## Cost Protection
 
-### Cost Protection
-
-AWS Budgets provides monthly cost monitoring and notification.
+AWS Budgets helps prevent unexpected cloud spending.
 
 ---
 
-## Frontend
+# 🧪 Testing
 
-The frontend was created using:
-
-```text
-HTML
-CSS
-JavaScript
-```
-
-Main pages:
-
-```text
-frontend/index.html
-frontend/organizer.html
-```
-
-JavaScript files:
-
-```text
-frontend/app.js
-frontend/organizer.js
-```
-
-Styles:
-
-```text
-frontend/style.css
-```
-
----
-
-## Homepage Features
-
-The public AnDTix homepage includes:
-
-- Sticky navigation
-- Event discovery
-- Event search
-- Location search
-- Event categories
-- Native AnDTix events
-- External Ghanaian event listings
-- Ticket registration
-- My Tickets lookup
-- Ticket cancellation
-- Organizer Portal navigation
-- Technology section
-- Founder section
-- Responsive design
-
----
-
-## Organizer Portal Features
-
-The Organizer Portal includes:
-
-- Organizer details
-- Event information
-- Event category selection
-- Venue and location information
-- Event date and time
-- Free or paid event selection
-- Ticket price
-- Event capacity
-- Standard or featured listing selection
-- Submission confirmation
-- Server-side event submission
-- Administrative review workflow
-
-The interface also demonstrates future payment options.
-
-Actual payment gateway processing has not yet been implemented.
-
----
-
-## Backend
-
-The backend is written in Python and deployed using AWS Lambda.
-
-Current structure:
-
-```text
-src/
-├── approve_event/
-│   └── app.py
-│
-├── cancel_registration/
-│   └── app.py
-│
-├── get_events/
-│   └── app.py
-│
-├── get_registrations/
-│   └── app.py
-│
-├── register_attendee/
-│   └── app.py
-│
-└── submit_event/
-    └── app.py
-```
-
----
-
-## Infrastructure as Code
-
-AWS infrastructure is defined using AWS SAM.
-
-Main infrastructure file:
-
-```text
-template.yaml
-```
-
-The SAM template defines resources including:
-
-- Amazon API Gateway
-- AWS Lambda functions
-- Amazon DynamoDB tables
-- IAM permissions
-- Lambda environment variables
-- API routes
-- Application outputs
-
----
-
-## Development Tools
-
-The project was developed using:
-
-```text
-Visual Studio Code
-Git
-GitHub
-GitHub Actions
-Python
-AWS CLI
-AWS SAM CLI
-Ruff
-Pytest
-HTML
-CSS
-JavaScript
-Amazon CloudShell
-```
-
----
-
-## Testing
-
-Unit tests are stored under:
+Automated tests are stored under:
 
 ```text
 tests/
 ```
 
-Current test files include:
+Current unit tests include:
 
 ```text
 tests/unit/test_cancel_registration.py
@@ -810,21 +834,102 @@ tests/unit/test_get_registrations.py
 tests/unit/test_register_attendee.py
 ```
 
-The final test run produced:
+---
+
+## Final Technical Verification
+
+The final local verification completed successfully:
+
+```text
+ruff check .    ✅
+pytest          ✅
+sam validate    ✅
+sam build       ✅
+```
+
+Pytest result:
 
 ```text
 18 passed
 ```
 
-Code quality is checked using Ruff.
-
-AWS SAM is used to validate and build the serverless infrastructure.
+GitHub Actions also passed successfully after the final project documentation updates.
 
 ---
 
-## Example API Requests
+# 🧱 Infrastructure as Code
 
-### Retrieve Events
+AWS infrastructure is defined using AWS SAM.
+
+Main template:
+
+```text
+template.yaml
+```
+
+The SAM template defines resources including:
+
+- Amazon API Gateway
+- AWS Lambda
+- Amazon DynamoDB
+- IAM permissions
+- Lambda environment variables
+- HTTP routes
+- CloudFormation outputs
+
+---
+
+# 📁 Project Structure
+
+```text
+andtix-event-api/
+│
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       └── deploy.yml
+│
+├── docs/
+│   └── images/
+│       └── andtix-architecture.png
+│
+├── frontend/
+│   ├── assets/
+│   │   └── dennis-antwi.jpg
+│   ├── app.js
+│   ├── index.html
+│   ├── organizer.html
+│   ├── organizer.js
+│   └── style.css
+│
+├── src/
+│   ├── approve_event/
+│   │   └── app.py
+│   ├── cancel_registration/
+│   │   └── app.py
+│   ├── get_events/
+│   │   └── app.py
+│   ├── get_registrations/
+│   │   └── app.py
+│   ├── register_attendee/
+│   │   └── app.py
+│   └── submit_event/
+│       └── app.py
+│
+├── tests/
+│   └── unit/
+│
+├── README.md
+├── pyproject.toml
+├── requirements-dev.txt
+└── template.yaml
+```
+
+---
+
+# 🔌 Example API Requests
+
+## Get Events
 
 ```bash
 curl https://1y36equfk9.execute-api.us-east-1.amazonaws.com/events
@@ -832,7 +937,7 @@ curl https://1y36equfk9.execute-api.us-east-1.amazonaws.com/events
 
 ---
 
-### Register for an Event
+## Register for an Event
 
 ```bash
 curl -X POST \
@@ -847,7 +952,7 @@ curl -X POST \
 
 ---
 
-### Retrieve Registrations
+## Retrieve Registrations
 
 ```bash
 curl \
@@ -856,7 +961,7 @@ curl \
 
 ---
 
-### Cancel Registration
+## Cancel a Registration
 
 ```bash
 curl -X DELETE \
@@ -865,7 +970,7 @@ curl -X DELETE \
 
 ---
 
-### Submit an Organizer Event
+## Submit an Organizer Event
 
 ```bash
 curl -X POST \
@@ -877,7 +982,7 @@ curl -X POST \
     "organizerEmail": "organizer@example.com",
     "organizerPhone": "+233000000000",
     "eventName": "Example Technology Event",
-    "eventDescription": "An example organizer event.",
+    "eventDescription": "A sample organizer event.",
     "eventCategory": "Technology",
     "eventVenue": "Example Venue",
     "eventCity": "Accra",
@@ -893,176 +998,312 @@ curl -X POST \
 
 ---
 
-## Deployment
+# 💻 Local Development
 
-The application can be prepared locally using:
+## Requirements
+
+Install:
+
+- Python
+- Git
+- AWS CLI
+- AWS SAM CLI
+
+Clone the repository:
+
+```bash
+git clone https://github.com/NisAntwi/andtix-event-api.git
+```
+
+Enter the project:
+
+```bash
+cd andtix-event-api
+```
+
+Install development dependencies:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+---
+
+## Run Code Quality Checks
+
+```bash
+ruff check .
+```
+
+---
+
+## Run Tests
+
+```bash
+pytest
+```
+
+---
+
+## Validate SAM
 
 ```bash
 sam validate
+```
+
+---
+
+## Build SAM Application
+
+```bash
 sam build
 ```
 
-Deployment is handled automatically through GitHub Actions when approved changes are pushed to the `main` branch.
-
 ---
 
-## Final Technical Verification
+## Run Frontend Locally
 
-Before final project documentation, the application completed the following final checks:
+From the project directory:
 
-```text
-ruff check .   ✅
-pytest         ✅ 18 passed
-sam validate   ✅
-sam build      ✅
+```bash
+python -m http.server 5500 --directory frontend
 ```
 
-GitHub Actions also completed successfully for both:
+Then open:
 
 ```text
-AnDTix CI
-Deploy AnDTix to AWS
+http://localhost:5500
+```
+
+Organizer Portal:
+
+```text
+http://localhost:5500/organizer.html
 ```
 
 ---
 
-## Current Project Status
+# 🚀 Deployment
 
-Core AnDTix capstone functionality is complete and operational.
+Backend deployment is automated through GitHub Actions.
 
-Verified components include:
+Typical workflow:
 
-- Serverless HTTP API
-- Event discovery
-- Event search
-- Location search
-- Category filtering
-- External event listings
-- Event registration
-- Registration lookup
-- Ticket cancellation
-- Organizer Portal
-- Organizer event submission
-- Pending event review
-- Private administrator approval
-- Automatic publication of approved events
-- Amazon S3 frontend hosting
-- Amazon CloudFront distribution
-- GitHub Actions CI/CD
-- GitHub OIDC authentication
-- Amazon DynamoDB persistence
-- CloudWatch logging
-- 14-day CloudWatch log retention
-- CloudWatch Lambda error alarm
-- Amazon SNS monitoring alerts
-- Verified SNS email delivery
-- AWS Budget monitoring
-- AWS Budget email alert
-- Automated unit testing
-- AWS SAM validation and build
+```text
+Code Change
+    ↓
+Git Commit
+    ↓
+Git Push
+    ↓
+GitHub Actions
+    ↓
+CI Validation
+    ↓
+AWS OIDC Authentication
+    ↓
+SAM Build
+    ↓
+SAM Deployment
+```
+
+The frontend is stored in Amazon S3 and served through CloudFront.
 
 ---
 
-## Future Improvements
+# ✅ Current Project Status
 
-The current implementation provides the core capstone functionality.
+The core AnDTix capstone platform is operational.
 
-Possible production improvements include:
+Verified functionality includes:
 
-- Amazon Cognito user authentication
-- Organizer user accounts
-- Organizer dashboards
-- Dedicated authenticated administrator dashboard
-- Email or OTP verification for My Tickets
-- Mobile Money payment integration
+- ✅ Live CloudFront website
+- ✅ Amazon S3 frontend hosting
+- ✅ Event discovery
+- ✅ Event search
+- ✅ Location search
+- ✅ Category filtering
+- ✅ External Ghanaian event listings
+- ✅ Native event registration
+- ✅ My Tickets
+- ✅ Registration cancellation
+- ✅ Organizer Portal
+- ✅ Organizer event submission
+- ✅ Pending approval storage
+- ✅ Private administrator approval
+- ✅ Automatic publication of approved events
+- ✅ Amazon API Gateway
+- ✅ Six AWS Lambda functions
+- ✅ Three DynamoDB workloads
+- ✅ GitHub Actions CI
+- ✅ Automated AWS deployment
+- ✅ GitHub OIDC authentication
+- ✅ CloudWatch Logs
+- ✅ 14-day log retention
+- ✅ CloudWatch Lambda error alarm
+- ✅ Amazon SNS email monitoring
+- ✅ Verified SNS test email
+- ✅ AWS Budget monitoring
+- ✅ 80% cost alert
+- ✅ Ruff code quality checks
+- ✅ 18 passing unit tests
+- ✅ SAM validation
+- ✅ SAM build
+- ✅ Project architecture documentation
+
+---
+
+# ⚠️ Current Production Limitations
+
+The current application is a capstone implementation rather than a complete commercial ticketing product.
+
+The following are not yet implemented:
+
+- Live payment processing
+- User authentication
+- Organizer authentication
+- Customer account system
+- Authenticated admin dashboard
+- Email/OTP verification for ticket lookup
+- QR ticket generation
+- QR ticket scanning
+- Automated transactional ticket emails
+- Event image uploads
+- Automated external-event ingestion
+- Advanced fraud protection
+
+These are intentionally listed as future production enhancements.
+
+---
+
+# 🔮 Future Improvements
+
+Potential future development includes:
+
+- Amazon Cognito authentication
+- Customer accounts
+- Organizer accounts
+- Organizer dashboard
+- Secure administrator dashboard
+- Email verification
+- OTP-based ticket lookup
 - Paystack integration
 - Hubtel integration
 - Flutterwave integration
+- Mobile Money payments
+- Visa and Mastercard payments
 - Server-side payment verification
 - QR-code ticket generation
-- Ticket scanning
-- Automated email ticket delivery
+- QR ticket scanning
+- Automated ticket emails
+- Event image uploads
+- Organizer sales analytics
+- Event analytics dashboard
 - CAPTCHA protection
 - AWS WAF
+- API rate limiting
 - Additional CloudWatch alarms
-- Event analytics dashboard
-- Event image uploads
-- Organizer sales reporting
 - Custom domain
-- Automated external event ingestion
+- Automated external-event feeds
 - Multi-region architecture
-
-The payment options displayed in the current Organizer Portal are part of the payment-ready interface design and are not yet connected to a live payment gateway.
 
 ---
 
-## Key Learning Outcomes
+# 🎓 Key Learning Outcomes
 
 This project provided practical experience with:
 
-- Serverless application architecture
+- AWS serverless architecture
 - AWS Lambda development
-- HTTP API design
 - Amazon API Gateway
+- REST/HTTP API design
 - DynamoDB data modelling
 - DynamoDB Global Secondary Indexes
+- Amazon S3
+- Amazon CloudFront
 - AWS SAM
 - Infrastructure as Code
+- IAM
 - Git
 - GitHub
 - GitHub Actions
-- CI/CD pipelines
-- AWS OIDC authentication
-- IAM permissions
-- Cloud monitoring
+- Continuous Integration
+- Continuous Deployment
+- AWS OIDC
 - CloudWatch Logs
 - CloudWatch alarms
 - Amazon SNS
-- Email notifications
-- AWS cost monitoring
 - AWS Budgets
+- Cloud cost monitoring
 - Security controls
-- Cloud deployment troubleshooting
-- Frontend and backend integration
-- Automated testing
+- Cloud troubleshooting
+- Frontend/backend integration
+- Python unit testing
+- Code quality automation
 
 ---
 
-## Conclusion
+# 🏁 Conclusion
 
-AnDTix demonstrates how AWS serverless technologies can be combined to build a functional event discovery and ticket registration platform.
+AnDTix demonstrates how modern AWS serverless technologies can be combined to build and operate an event discovery and ticket registration platform.
 
-The platform supports both attendees and event organizers while maintaining a controlled administrative approval process for organizer-submitted events.
+The project supports both event attendees and organizers while maintaining a controlled administrative publishing process for organizer-submitted events.
 
-By combining AWS Lambda, Amazon API Gateway, DynamoDB, Amazon S3, CloudFront, CloudWatch, Amazon SNS, AWS Budgets, AWS SAM and GitHub Actions, the project demonstrates a complete cloud application lifecycle covering:
+The solution combines:
 
 ```text
-Development
-     ↓
-Testing
-     ↓
-Continuous Integration
-     ↓
-Deployment
-     ↓
-Monitoring
-     ↓
-Security
-     ↓
-Cost Management
-     ↓
-Operational Support
+Amazon CloudFront
+Amazon S3
+Amazon API Gateway
+AWS Lambda
+Amazon DynamoDB
+AWS SAM
+Amazon CloudWatch
+Amazon SNS
+AWS Budgets
+GitHub Actions
+AWS OIDC
 ```
 
-The project provides a scalable technical foundation that can be extended with authentication, payment processing, QR ticketing, organizer dashboards and other production features in the future.
+Together, these technologies demonstrate a complete cloud application lifecycle:
+
+```text
+Plan
+  ↓
+Develop
+  ↓
+Test
+  ↓
+Build
+  ↓
+Deploy
+  ↓
+Monitor
+  ↓
+Secure
+  ↓
+Control Cost
+  ↓
+Improve
+```
+
+AnDTix now provides a strong serverless foundation that can be extended with authentication, payment processing, QR ticketing, organizer dashboards and other production capabilities.
 
 ---
 
-## Repository
+# 🔗 Links
 
-```text
-https://github.com/NisAntwi/andtix-event-api
-```
+### Live AnDTix Website
+
+**https://d1ikp9n3ouohir.cloudfront.net/**
+
+### Live API
+
+**https://1y36equfk9.execute-api.us-east-1.amazonaws.com**
+
+### GitHub Repository
+
+**https://github.com/NisAntwi/andtix-event-api**
 
 ---
 
